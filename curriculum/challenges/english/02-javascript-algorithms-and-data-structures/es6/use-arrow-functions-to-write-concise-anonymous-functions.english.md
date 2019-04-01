@@ -36,6 +36,8 @@ tests:
     testString: assert(magic().getDate() == new Date().getDate(), '<code>magic()</code> returns correct date.');
   - text: <code>function</code> keyword was not used.
     testString: getUserInput => assert(!getUserInput('index').match(/function/g), '<code>function</code> keyword was not used.');
+  - text: This always fails and travis should notice.
+    testString: assert(false);
 
 ```
 
