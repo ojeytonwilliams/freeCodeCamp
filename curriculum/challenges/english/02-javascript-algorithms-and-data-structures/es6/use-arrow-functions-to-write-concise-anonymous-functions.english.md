@@ -27,7 +27,7 @@ Rewrite the function assigned to the variable <code>magic</code> which returns a
 ```yml
 tests:
   - text: User should replace <code>var</code> keyword.
-    testString: getUserInput => assert(!getUserInput('index').match(/var/g));
+     testString: getUserInput => assert(!getUserInput('index').match(/var/g));
   - text: <code>magic</code> should be a constant variable (by using <code>const</code>).
     testString: getUserInput => assert(getUserInput('index').match(/const\s+magic/g));
   - text: <code>magic</code> should be a <code>function</code>.
