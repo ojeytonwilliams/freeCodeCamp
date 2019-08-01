@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import uniq from 'lodash/uniq';
 import { createSelector } from 'reselect';
+import cookies from 'browser-cookies';
 
 import SuperBlock from './components/SuperBlock';
 import Spacer from '../helpers/Spacer';
@@ -11,11 +12,15 @@ import Spacer from '../helpers/Spacer';
 import './map.css';
 import { ChallengeNode } from '../../redux/propTypes';
 import { toggleSuperBlock, toggleBlock, isInitializedSelector } from './redux';
-import { currentChallengeUrlSelector } from '../../redux';
+import {
+  currentChallengeUrlSelector,
+  currentChallengeIdSelector
+} from '../../redux';
 import { getBlocksFromChallengeUrl } from '../../utils';
 import { blockNameify } from '../../../utils/blockNameify';
 
 const propTypes = {
+  currentChallengeId: PropTypes.string,
   currentChallengeUrl: PropTypes.string,
   introNodes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -34,9 +39,11 @@ const propTypes = {
 
 const mapStateToProps = state => {
   return createSelector(
+    currentChallengeIdSelector,
     currentChallengeUrlSelector,
     isInitializedSelector,
-    (currentChallengeUrl, isInitialized) => ({
+    (currentChallengeId, currentChallengeUrl, isInitialized) => ({
+      currentChallengeId,
       currentChallengeUrl,
       isInitialized
     })
@@ -54,12 +61,28 @@ function mapDispatchToProps(dispatch) {
 }
 
 export class Map extends Component {
+  constructor(props) {
+    super(props);
+    console.log('CONSTRUCTOR');
+    console.log('id', props.currentChallengeId);
+    console.log('url', props.currentChallengeUrl);
+
+    const currentChallengeId = cookies.get('currentChallengeId');
+    console.log('cookie id', currentChallengeId);
+  }
+
   componentDidMount() {
+    console.log('componentDidMount');
+    console.log('id', this.props.currentChallengeId);
+    console.log('url', this.props.currentChallengeUrl);
     if (this.props.currentChallengeUrl && !this.props.isInitialized)
       this.initializeExpandedState();
   }
 
   componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate');
+    console.log('id', this.props.currentChallengeId);
+    console.log('url', this.props.currentChallengeUrl);
     if (prevProps.currentChallengeUrl !== this.props.currentChallengeUrl)
       this.initializeExpandedState();
   }
@@ -85,6 +108,7 @@ export class Map extends Component {
   }
 
   render() {
+    console.log('render');
     const { nodes } = this.props;
     const superBlocks = uniq(nodes.map(({ superBlock }) => superBlock));
     return (
