@@ -6,6 +6,7 @@ import {
   currentChallengeIdSelector,
   openDonationModal,
   showDonationSelector,
+  updateCurrentChallengeUrl,
   updateComplete,
   updateFailed,
   userSelector
@@ -17,24 +18,25 @@ import { randomCompliment } from '../utils/get-words';
 import { updateSuccessMessage } from './';
 
 function* currentChallengeSaga({ payload: { id, slug } }) {
-  console.log(id, slug);
   cookies.set('currentChallengeUrl', slug, { expires: 365 });
+  yield put(updateCurrentChallengeUrl(slug));
+
   const isSignedIn = yield select(isSignedInSelector);
   const currentChallengeId = yield select(currentChallengeIdSelector);
-  // if (isSignedIn && id !== currentChallengeId) {
-  //   const update = {
-  //     endpoint: '/update-my-current-challenge',
-  //     payload: {
-  //       currentChallengeId: id
-  //     }
-  //   };
-  //   try {
-  //     yield call(post, update.endpoint, update.payload);
-  //     yield put(updateComplete());
-  //   } catch {
-  //     yield put(updateFailed(update));
-  //   }
-  // }
+  if (isSignedIn && id !== currentChallengeId) {
+    const update = {
+      endpoint: '/update-my-current-challenge',
+      payload: {
+        currentChallengeId: id
+      }
+    };
+    try {
+      yield call(post, update.endpoint, update.payload);
+      yield put(updateComplete());
+    } catch {
+      yield put(updateFailed(update));
+    }
+  }
 }
 
 function* updateSuccessMessageSaga() {

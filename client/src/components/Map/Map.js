@@ -63,33 +63,20 @@ function mapDispatchToProps(dispatch) {
 export class Map extends Component {
   constructor(props) {
     super(props);
-    console.log('CONSTRUCTOR');
-    console.log('id', props.currentChallengeId);
-    console.log('url', props.currentChallengeUrl);
+    // Tries to use the cookie, then the store value and finally defaults
+    // to the first challenge.
+    const currentChallengeUrl =
+      cookies.get('currentChallengeUrl') ||
+      props.currentChallengeUrl ||
+      props.nodes[0].fields.slug;
 
-    const currentChallengeId = cookies.get('currentChallengeId');
-    console.log('cookie id', currentChallengeId);
+    if (!this.props.isInitialized)
+      this.initializeExpandedState(currentChallengeUrl);
   }
 
-  componentDidMount() {
-    console.log('componentDidMount');
-    console.log('id', this.props.currentChallengeId);
-    console.log('url', this.props.currentChallengeUrl);
-    if (this.props.currentChallengeUrl && !this.props.isInitialized)
-      this.initializeExpandedState();
-  }
-
-  componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate');
-    console.log('id', this.props.currentChallengeId);
-    console.log('url', this.props.currentChallengeUrl);
-    if (prevProps.currentChallengeUrl !== this.props.currentChallengeUrl)
-      this.initializeExpandedState();
-  }
-
-  initializeExpandedState() {
+  initializeExpandedState(currentChallengeUrl) {
     const { block, superBlock } = getBlocksFromChallengeUrl(
-      this.props.currentChallengeUrl
+      currentChallengeUrl
     );
     this.props.toggleBlock(block);
     this.props.toggleSuperBlock(blockNameify(superBlock));
@@ -108,7 +95,6 @@ export class Map extends Component {
   }
 
   render() {
-    console.log('render');
     const { nodes } = this.props;
     const superBlocks = uniq(nodes.map(({ superBlock }) => superBlock));
     return (
