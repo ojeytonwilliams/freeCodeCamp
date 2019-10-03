@@ -118,6 +118,7 @@
         false
       ],
       "./tools/scripts/lint/remark-plugins/section-spaces.js",
+      "./tools/scripts/lint/remark-plugins/prism-languages.js",
       "remark-lint-fenced-code-flag",
       ["remark-frontmatter", "yaml"],
       ["remark-stringify", [
