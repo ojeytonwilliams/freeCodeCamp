@@ -33,7 +33,3 @@ jobs:
 
     - stage: Unit and Integration tests
       script: npm test
-
-    - stage: End to end
-      script: npm run e2e:ci
-

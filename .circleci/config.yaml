@@ -16,7 +16,7 @@ jobs:
             command: cp sample.env .env
         - run:
             name: Install node modules
-            command: yarn
+            command: npm ci
         - run:
             name: End 2 end test command
             command: npm run e2e:ci

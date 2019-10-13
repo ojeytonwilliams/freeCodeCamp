@@ -25,6 +25,7 @@ fi
 
   kill -15 $gastby_pid $api_pid &>/dev/null
 
+  echo "Finally exiting"
   exit "${exit_code}"
 }
 
