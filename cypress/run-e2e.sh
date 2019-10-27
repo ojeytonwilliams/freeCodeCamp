@@ -15,17 +15,17 @@ finally() {
   local hanging_client_processes=$(ps aux | grep -v grep | grep client/node_modules | awk '{print $2}')
   local hanging_api_processes=$(ps aux | grep -v grep | grep api-server/node_modules | awk '{print $2}')
 
-  # Send SIGTERM to the processes
+  # Send kill signal to the processes
   if [ ${#hanging_api_processes} -gt "0" ];  then
-    kill -15 $hanging_api_processes &>/dev/null
+    kill -9 $hanging_api_processes &>/dev/null
   fi
   if [ ${#hanging_client_processes} -gt "0" ]; then
-    kill -15 $ hanging_client_processes &>/dev/null
+    kill -9 $ hanging_client_processes &>/dev/null
 fi
 
-  kill -15 $gastby_pid $api_pid &>/dev/null
+  kill -9 $gastby_pid $api_pid &>/dev/null
 
-  echo "Finally exiting"
+  echo "Finally exiting with a status code of ${exit_code}"
   exit "${exit_code}"
 }
 
@@ -38,9 +38,10 @@ run_development_application() {
 
 
   cd ../api-server
-  npm run develop &
+  npm start &
   api_pid=$!
 
+  cypress_cmd='cypress:run'
   cd ../
 }
 
