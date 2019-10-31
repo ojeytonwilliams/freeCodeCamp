@@ -21,15 +21,17 @@ import createWorker from '../utils/worker-executor';
 const protectTimeout = 100;
 Babel.registerPlugin('loopProtection', protect(protectTimeout));
 
+// sourceType: 'unambiguous' means users do not have to conform to strict mode,
+// unless they're writing code with import/export statements
 const babelOptionsJSX = {
   plugins: ['loopProtection'],
   presets: [presetEnv, presetReact],
-  sourceType: 'script'
+  sourceType: 'unambiguous'
 };
 
 const babelOptionsJS = {
   presets: [presetEnv],
-  sourceType: 'script'
+  sourceType: 'unambiguous'
 };
 
 const babelTransformCode = options => code =>
