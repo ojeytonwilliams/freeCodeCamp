@@ -1,5 +1,6 @@
-import '@babel/polyfill';
-import jQuery from 'jquery';
+'use strict';
+require('@babel/polyfill');
+const jQuery = require('jquery');
 
 window.$ = jQuery;
 

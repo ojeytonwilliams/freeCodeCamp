@@ -1,3 +1,4 @@
+'use strict';
 // work around for SASS error in Edge
 // https://github.com/medialize/sass.js/issues/96#issuecomment-424386171
 if (!self.crypto) {

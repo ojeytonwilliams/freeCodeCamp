@@ -23,11 +23,13 @@ Babel.registerPlugin('loopProtection', protect(protectTimeout));
 
 const babelOptionsJSX = {
   plugins: ['loopProtection'],
-  presets: [presetEnv, presetReact]
+  presets: [presetEnv, presetReact],
+  sourceType: 'script'
 };
 
 const babelOptionsJS = {
-  presets: [presetEnv]
+  presets: [presetEnv],
+  sourceType: 'script'
 };
 
 const babelTransformCode = options => code =>

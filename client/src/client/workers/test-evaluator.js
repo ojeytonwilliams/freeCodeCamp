@@ -1,6 +1,6 @@
-import chai from 'chai';
-import '@babel/polyfill';
-import __toString from 'lodash/toString';
+require('@babel/polyfill');
+const chai = require('chai');
+const __toString = require('lodash/toString');
 
 const __utils = (() => {
   const MAX_LOGS_SIZE = 64 * 1024;
