@@ -20,7 +20,7 @@ finally() {
     kill -9 $hanging_api_processes &>/dev/null
   fi
   if [ ${#hanging_client_processes} -gt "0" ]; then
-    kill -9 $ hanging_client_processes &>/dev/null
+    kill -9 $hanging_client_processes &>/dev/null
 fi
 
   kill -9 $gastby_pid $api_pid &>/dev/null
