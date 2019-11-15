@@ -73,7 +73,7 @@
     "jest": "^24.8.0",
     "js-yaml": "^3.13.0",
     "lerna": "^3.16.4",
-    "lint-staged": "^8.2.1",
+    "lint-staged": "^10.0.0-beta.3",
     "lodash": "^4.17.15",
     "markdownlint": "^0.15.0",
     "npm-run-all": "^4.1.5",
@@ -92,19 +92,6 @@
     "sinon-express-mock": "^2.2.0",
     "slugg": "^1.2.1"
   },
-  "lint-staged": {
-    "linters": {
-      "*.js": [
-        "eslint --fix",
-        "git add"
-      ],
-      "./curriculum/challenges/**/*.md": "node ./tools/scripts/lint/index.js",
-      "*.css": [
-        "prettier --write",
-        "git add"
-      ]
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -120,10 +107,17 @@
       "./tools/scripts/lint/remark-plugins/section-spaces.js",
       "./tools/scripts/lint/remark-plugins/prism-languages.js",
       "remark-lint-fenced-code-flag",
-      ["remark-frontmatter", "yaml"],
-      ["remark-stringify", [
-        "fence", "`"
-      ]]
+      [
+        "remark-frontmatter",
+        "yaml"
+      ],
+      [
+        "remark-stringify",
+        [
+          "fence",
+          "`"
+        ]
+      ]
     ]
   }
 }
