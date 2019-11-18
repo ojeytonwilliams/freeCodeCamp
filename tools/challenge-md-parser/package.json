@@ -13,7 +13,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "parse-entities": "^1.2.2"
   },
   "dependencies": {
     "@google-cloud/translate": "^2.1.3",

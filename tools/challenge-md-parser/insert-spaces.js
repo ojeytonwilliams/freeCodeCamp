@@ -4,6 +4,7 @@ const raw = require('hast-util-raw');
 const findAndReplace = require('hast-util-find-and-replace');
 const toHtml = require('hast-util-to-html');
 const isEmpty = require('lodash/isEmpty');
+const parseEntities = require('parse-entities');
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -42,6 +43,12 @@ function plugin() {
   function transformer(tree) {
     return visit(tree, 'html', visitor);
 
+    function codeVisitor(node) {
+      console.log('CODE NODE', node);
+      // TODO: replace code elements with text and parse any entities
+      // can we return the replacement to replace it in the original tree?
+    }
+
     function visitor(node) {
       // 'html' nodes contain un-parsed html strings, so we first convert them
       // to hast and then parse them to produce a syntax tree (so we can locate
@@ -53,20 +60,30 @@ function plugin() {
           section.properties.id === 'description') &&
         !isEmpty(section.children)
       ) {
+        console.log('SECTION!', section);
         // section contains the section tag and all the text up to the first
-        // blank line.  This replaces single line breaks with empty lines, so
+        // blank line.
+
+        // First a newline needs inserting at the start, since this is needed
+        // no matter what.
+
+        section.children.unshift({ type: 'text', value: '\n' });
+
+        // This replaces single line breaks with empty lines, so
         // that the section text that previously required special treatment
         // becomes standard markdown.
         findAndReplace(section, '\n', '\n\n');
 
         // This will be used, once, to convert old challenges to the new
         // format, so it's not as dangerous as it sounds.
-        const sectionStr = toHtml(section, {
+
+        visit(section, 'element', codeVisitor)
+
+        node.value = toHtml(section, {
           allowDangerousCharacters: true,
           allowDangerousHTML: true,
           quote: "'"
         });
-        node.value = sectionStr;
       }
     }
   }
