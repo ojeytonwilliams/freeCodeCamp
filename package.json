@@ -34,7 +34,7 @@
     "lint:challenges": "cd ./curriculum && npm run lint",
     "lint:js": "eslint .",
     "lint:css": "npm run prettier -- --check",
-    "lint-md": "remark .",
+    "lint-md": "remark -q .",
     "lint-single-md": "remark",
     "prettier": "prettier \"**/*.css\"",
     "postinstall": "npm run bootstrap",

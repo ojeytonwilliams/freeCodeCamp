@@ -1,8 +1,9 @@
 const visit = require('unist-util-visit');
 const toHast = require('mdast-util-to-hast');
-var raw = require('hast-util-raw');
-var findAndReplace = require('hast-util-find-and-replace');
-var toHtml = require('hast-util-to-html');
+const raw = require('hast-util-raw');
+const findAndReplace = require('hast-util-find-and-replace');
+const toHtml = require('hast-util-to-html');
+const isEmpty = require('lodash/isEmpty');
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -49,7 +50,8 @@ function plugin() {
       if (
         section.type === 'element' &&
         (section.properties.id === 'instructions' ||
-          section.properties.id === 'description')
+          section.properties.id === 'description') &&
+        !isEmpty(section.children)
       ) {
         // section contains the section tag and all the text up to the first
         // blank line.  This replaces single line breaks with empty lines, so
