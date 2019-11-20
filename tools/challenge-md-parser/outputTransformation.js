@@ -8,18 +8,18 @@ const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/';
 
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//     formatFile(file.fullPath)
-//       .then(prettify)
-//       .then(text => fs.writeFileSync(file.fullPath, text))
-//       .catch(err => {
-//         console.log('format err', err);
-//         console.log('file in question', file);
-//         throw err;
-//       });
-//   }
-// });
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    formatFile(file.fullPath)
+      .then(prettify)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(err => {
+        console.log('format err', err);
+        console.log('file in question', file);
+        throw err;
+      });
+  }
+});
 // formatFile(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/09-certificates/responsive-web-design-certificate/responsive-web-design-certificate.english.md'
@@ -42,7 +42,12 @@ const challengeDir = '../../curriculum/challenges/';
 //   '../../curriculum/challenges/portuguese/02-javascript-algorithms-and-data-structures/basic-javascript/returning-boolean-values-from-functions.portuguese.md'
 // ).then(output => console.log(output));
 
-formatFile(
-  // eslint-disable-next-line
-  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
-).then(output => console.log(output));
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
+// ).then(output => console.log(output));
+
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/russian/01-responsive-web-design/basic-css/cascading-css-variables.russian.md'
+// ).then(output => console.log(output));
