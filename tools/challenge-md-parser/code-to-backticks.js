@@ -5,8 +5,9 @@ const raw = require('hast-util-raw');
 function codeToInline(node) {
   if (node.children.length > 1) {
     console.log('Leaving code block as it does not just contain text');
-    // throw Error(); // here if you want to see which file has the problem.
-    return node;
+    // TODO:
+    throw Error(); // here if you want to see which file has the problem.
+    // return node;
   } else if (node.children.length === 0) {
     // chances are the original challenge has a mistake, as it's an empty code
     // block: <code></code>, but in the interests of keeping the formatting
@@ -25,7 +26,7 @@ function plugin() {
   return transformer;
 
   function transformer(tree) {
-    return visit(tree, 'paragraph', visitor);
+    visit(tree, 'paragraph', visitor);
 
     function codeVisitor(node, id, parent) {
       parent.children[id] = codeToInline(node);

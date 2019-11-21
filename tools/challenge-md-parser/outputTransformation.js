@@ -9,12 +9,11 @@ const challengeDir = '../../curriculum/challenges/english';
 
 readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
   if (file.stat.isFile()) {
-    formatFile(file.fullPath)
-      .then(prettify)
-      .then(text => fs.writeFileSync(file.fullPath, text))
-      .catch(err => {
-        console.log('formatting err', err.message);
-      });
+    formatFile(file.fullPath).then(prettify);
+    // .then(text => fs.writeFileSync(file.fullPath, text))
+    // .catch(err => {
+    //   console.log('formatting err', err.message);
+    // });
   }
 });
 
@@ -57,4 +56,6 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 //   '../../curriculum/challenges/english/08-coding-interview-prep/data-structures/search-within-a-linked-list.english.md'
 // )
 //   .then(prettify)
-//   .then(output => console.log(output));
+//   .then(text => fs.writeFileSync('waaaat.txt', text))
+//   .catch(err => console.log('Sorry?', err));
+// // .then(output => console.log(output));
