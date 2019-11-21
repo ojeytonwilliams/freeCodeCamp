@@ -67,13 +67,19 @@ function plugin() {
         // becomes standard markdown.
         findAndReplace(section, '\n', '\n\n');
 
-        // This will be used, once, to convert old challenges to the new
-        // format, so it's not as dangerous as it sounds.
-        node.value = toHtml(section, {
-          allowDangerousCharacters: true,
-          allowDangerousHTML: true,
-          quote: "'"
-        });
+        // This comes from an unclosed <section>, so we have to pretend it's
+        // a root element (otherwise it gets wrapped in a tag) and add the
+        // opening <section> back in by hand.
+        node.value =
+          `<section id='${section.properties.id}'>\n` +
+          toHtml(
+            { type: 'root', children: section.children },
+            {
+              allowDangerousCharacters: true,
+              allowDangerousHTML: true,
+              quote: "'"
+            }
+          );
       }
     }
   }

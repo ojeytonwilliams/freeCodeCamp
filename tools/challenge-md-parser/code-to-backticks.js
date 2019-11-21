@@ -1,25 +1,24 @@
 const visit = require('unist-util-visit');
 const toHast = require('mdast-util-to-hast');
 const raw = require('hast-util-raw');
+const toMdast = require('hast-util-to-mdast');
+const toHtml = require('hast-util-to-html');
+const inlineCode = require('hast-util-to-mdast/lib/handlers/inline-code');
 
-function codeToInline(node) {
+function codeToInline(h, node) {
   if (node.children.length > 1) {
     console.log('Leaving code block as it does not just contain text');
-    // TODO:
-    throw Error(); // here if you want to see which file has the problem.
-    // return node;
-  } else if (node.children.length === 0) {
-    // chances are the original challenge has a mistake, as it's an empty code
-    // block: <code></code>, but in the interests of keeping the formatting
-    // unchanged, this recreates that using backticks.
-    return { type: 'inlineCode', value: '' };
+    return {
+      type: 'html',
+      value: toHtml(node, {
+        allowDangerousCharacters: true,
+        allowDangerousHTML: true,
+        quote: "'"
+      })
+    };
+  } else {
+    return inlineCode(h, node);
   }
-
-  const text = node.children[0].value;
-  if (/``/.test(text)) {
-    throw Error('Cannot handle code with two backticks yet');
-  }
-  return { type: 'inlineCode', value: text };
 }
 
 function plugin() {
@@ -28,19 +27,12 @@ function plugin() {
   function transformer(tree) {
     visit(tree, 'paragraph', visitor);
 
-    function codeVisitor(node, id, parent) {
-      parent.children[id] = codeToInline(node);
-    }
-
-    function visitor(node) {
+    function visitor(node, id, parent) {
       const paragraph = raw(toHast(node, { allowDangerousHTML: true }));
-      visit(
-        paragraph,
-        node => node.type === 'element' && node.tagName === 'code',
-        codeVisitor
-      );
 
-      node.children = paragraph.children;
+      parent.children[id] = toMdast(paragraph, {
+        handlers: { code: codeToInline }
+      });
     }
   }
 }

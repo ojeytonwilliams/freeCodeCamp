@@ -7,15 +7,16 @@ const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
 
-readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-  if (file.stat.isFile()) {
-    formatFile(file.fullPath).then(prettify);
-    // .then(text => fs.writeFileSync(file.fullPath, text))
-    // .catch(err => {
-    //   console.log('formatting err', err.message);
-    // });
-  }
-});
+// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+//   if (file.stat.isFile()) {
+//     formatFile(file.fullPath)
+//       .then(prettify)
+//       .then(text => fs.writeFileSync(file.fullPath, text))
+//       .catch(err => {
+//         console.log('formatting err', err.message);
+//       });
+//   }
+// });
 
 // formatFile(
 //   // eslint-disable-next-line
@@ -56,6 +57,20 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 //   '../../curriculum/challenges/english/08-coding-interview-prep/data-structures/search-within-a-linked-list.english.md'
 // )
 //   .then(prettify)
-//   .then(text => fs.writeFileSync('waaaat.txt', text))
-//   .catch(err => console.log('Sorry?', err));
-// // .then(output => console.log(output));
+//   .then(output => console.log(output));
+
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/sort-disjoint-sublist.english.md'
+// )
+//   .then(prettify)
+//   .then(output => console.log(output));
+
+
+// This one closes the section after the h4 tag.  Yikes.
+formatFile(
+  // eslint-disable-next-line
+  '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/balanced-brackets.english.md'
+)
+  .then(prettify)
+  .then(output => console.log(output));
