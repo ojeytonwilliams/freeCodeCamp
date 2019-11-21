@@ -39,7 +39,9 @@ will alway work.  The linter can check that the first blank line exists.
 
 function codeToBackticks(node) {
   if (node.children.length > 1) {
-    throw Error('Cannot handle code blocks with multiple children');
+    console.log('Leaving code block as it does not just contain text');
+    // throw Error(); // here if you want to see which file has the problem.
+    return node;
   } else if (node.children.length === 0) {
     // chances are the original challenge has a mistake, as it's an empty code
     // block: <code></code>, but in the interests of keeping the formatting
@@ -51,7 +53,7 @@ function codeToBackticks(node) {
   const leftTick = /`/.test(text) ? '`` ' : '`';
   const rightTick = /`/.test(text) ? ' ``' : '`';
   if (/``/.test(text)) {
-    throw Error('not sure how to handle code with two backticks yet');
+    throw Error('Cannot handle code with two backticks yet');
   }
   // has to be raw or the entities will get encoded.
   return { type: 'raw', value: leftTick + text + rightTick };
@@ -81,8 +83,15 @@ function plugin() {
         // section contains the section tag and all the text up to the first
         // blank line.
 
-        // First a newline needs inserting at the start, since this is needed
-        // no matter what.
+        // Convert code tags to backticks, where possible.
+        visit(
+          section,
+          node => node.type === 'element' && node.tagName === 'code',
+          codeVisitor
+        );
+
+        // Next a newline needs inserting at the start, since this is needed
+        // to ensure the text will be parsed as markdown.
 
         section.children.unshift({ type: 'text', value: '\n' });
 
@@ -93,13 +102,6 @@ function plugin() {
 
         // This will be used, once, to convert old challenges to the new
         // format, so it's not as dangerous as it sounds.
-
-        visit(
-          section,
-          node => node.type === 'element' && node.tagName === 'code',
-          codeVisitor
-        );
-
         node.value = toHtml(section, {
           allowDangerousCharacters: true,
           allowDangerousHTML: true,

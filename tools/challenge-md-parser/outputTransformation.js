@@ -1,4 +1,3 @@
-const path = require('path');
 const {
   formatFile: formatFile,
   prettifyText: prettify
@@ -6,7 +5,7 @@ const {
 const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
-const challengeDir = '../../curriculum/challenges/';
+const challengeDir = '../../curriculum/challenges/english';
 
 readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
   if (file.stat.isFile()) {
@@ -14,12 +13,11 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
       .then(prettify)
       .then(text => fs.writeFileSync(file.fullPath, text))
       .catch(err => {
-        console.log('format err', err);
-        console.log('file in question', file);
-        throw err;
+        console.log('formatting err', err.message);
       });
   }
 });
+
 // formatFile(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/09-certificates/responsive-web-design-certificate/responsive-web-design-certificate.english.md'
@@ -50,4 +48,11 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 // formatFile(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/russian/01-responsive-web-design/basic-css/cascading-css-variables.russian.md'
+// ).then(output => console.log(output));
+
+// NOTE: the next one has an unterminated code block!
+
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/data-structures/search-within-a-linked-list.english.md'
 // ).then(output => console.log(output));
