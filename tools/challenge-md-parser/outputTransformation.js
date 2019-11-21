@@ -55,4 +55,6 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 // formatFile(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/data-structures/search-within-a-linked-list.english.md'
-// ).then(output => console.log(output));
+// )
+//   .then(prettify)
+//   .then(output => console.log(output));

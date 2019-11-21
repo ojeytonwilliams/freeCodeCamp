@@ -5,14 +5,14 @@ const frontmatter = require('remark-frontmatter');
 const stringify = require('remark-stringify');
 
 const insertSpaces = require('./insert-spaces');
+const codeToBackticks = require('./code-to-backticks');
 
 const processor = unified()
   .use(markdown)
   .use(insertSpaces)
   .use(stringify, { fences: true })
-  .use(frontmatter, ['yaml'])
+  .use(frontmatter, ['yaml']);
 // ^ Prevents the frontmatter being modified
-
 
 // TODO: either the processor or the prettifier (or both) is converting
 // characters into html entities.
@@ -22,6 +22,7 @@ const processor = unified()
 // elements... Not ideal!
 const prettifier = unified()
   .use(markdown)
+  .use(codeToBackticks)
   .use(stringify, { fences: true })
   .use(frontmatter, ['yaml']);
 

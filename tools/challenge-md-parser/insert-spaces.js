@@ -37,37 +37,11 @@ no need to handle the case where the first line is not empty and markdown syntax
 will alway work.  The linter can check that the first blank line exists.
 */
 
-function codeToBackticks(node) {
-  if (node.children.length > 1) {
-    console.log('Leaving code block as it does not just contain text');
-    // throw Error(); // here if you want to see which file has the problem.
-    return node;
-  } else if (node.children.length === 0) {
-    // chances are the original challenge has a mistake, as it's an empty code
-    // block: <code></code>, but in the interests of keeping the formatting
-    // unchanged, this recreates that using backticks.
-    return { type: 'raw', value: '``' };
-  }
-
-  const text = node.children[0].value;
-  const leftTick = /`/.test(text) ? '`` ' : '`';
-  const rightTick = /`/.test(text) ? ' ``' : '`';
-  if (/``/.test(text)) {
-    throw Error('Cannot handle code with two backticks yet');
-  }
-  // has to be raw or the entities will get encoded.
-  return { type: 'raw', value: leftTick + text + rightTick };
-}
-
 function plugin() {
   return transformer;
 
   function transformer(tree) {
     return visit(tree, 'html', visitor);
-
-    function codeVisitor(node, id, parent) {
-      parent.children[id] = codeToBackticks(node);
-    }
 
     function visitor(node) {
       // 'html' nodes contain un-parsed html strings, so we first convert them
@@ -82,13 +56,6 @@ function plugin() {
       ) {
         // section contains the section tag and all the text up to the first
         // blank line.
-
-        // Convert code tags to backticks, where possible.
-        visit(
-          section,
-          node => node.type === 'element' && node.tagName === 'code',
-          codeVisitor
-        );
 
         // Next a newline needs inserting at the start, since this is needed
         // to ensure the text will be parsed as markdown.
