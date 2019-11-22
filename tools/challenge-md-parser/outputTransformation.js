@@ -6,17 +6,19 @@ const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
-
-readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-  if (file.stat.isFile()) {
-    formatFile(file.fullPath)
-      .then(codeToBackticks)
-      .then(text => fs.writeFileSync(file.fullPath, text))
-      .catch(() => {
-        console.log(file.path);
-      });
-  }
-});
+todo consider two conversion to code passes, once before inserting spaces onces after
+NOTE this doesn't solve the problem of bare urls, but it might deal with links inside
+code blocks MAAAAYBE.
+// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+//   if (file.stat.isFile()) {
+//     formatFile(file.fullPath)
+//       .then(codeToBackticks)
+//       .then(text => fs.writeFileSync(file.fullPath, text))
+//       .catch(() => {
+//         console.log(file.path);
+//       });
+//   }
+// });
 
 // formatFile(
 //   // eslint-disable-next-line
@@ -40,13 +42,13 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 //   '../../curriculum/challenges/portuguese/02-javascript-algorithms-and-data-structures/basic-javascript/returning-boolean-values-from-functions.portuguese.md'
 // ).then(output => console.log(output));
 
-// // This one turns links *inside code blocks* into anchors
-// formatFile(
-//   // eslint-disable-next-line
-//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
-// )
-//   .then(prettify)
-//   .then(output => console.log(output));
+// This one turns links *inside code blocks* into anchors
+formatFile(
+  // eslint-disable-next-line
+  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
+)
+  // .then(codeToBackticks)
+  .then(output => console.log(output));
 
 // formatFile(
 //   // eslint-disable-next-line
@@ -87,17 +89,17 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 
 /* challenges with complicated code blocks:
 
-03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md
 01-responsive-web-design/responsive-web-design-principles/create-a-media-query.english.md
-03-front-end-libraries/bootstrap/add-font-awesome-icons-to-our-buttons.english.md
-01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md
 02-javascript-algorithms-and-data-structures/javascript-algorithms-and-data-structures-projects/palindrome-checker.english.md
+03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md
+01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md
+03-front-end-libraries/bootstrap/add-font-awesome-icons-to-our-buttons.english.md
 02-javascript-algorithms-and-data-structures/basic-algorithm-scripting/factorialize-a-number.english.md
 06-information-security-and-quality-assurance/advanced-node-and-express/send-and-display-chat-messages.english.md
 01-responsive-web-design/basic-css/import-a-google-font.english.md
 01-responsive-web-design/basic-html-and-html5/link-to-external-pages-with-anchor-elements.english.md
-01-responsive-web-design/basic-html-and-html5/turn-an-image-into-a-link.english.md
 02-javascript-algorithms-and-data-structures/es6/use-getters-and-setters-to-control-access-to-an-object.english.md
+01-responsive-web-design/basic-html-and-html5/turn-an-image-into-a-link.english.md
 03-front-end-libraries/bootstrap/use-responsive-design-with-bootstrap-fluid-containers.english.md
 03-front-end-libraries/bootstrap/use-the-bootstrap-grid-to-put-elements-side-by-side.english.md
 08-coding-interview-prep/rosetta-code/emirp-primes.english.md
@@ -109,6 +111,7 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 08-coding-interview-prep/rosetta-code/sort-disjoint-sublist.english.md
 08-coding-interview-prep/rosetta-code/zeckendorf-number-representation.english.md
 
+
 */
 
 /* NOTE: some deliberate links exist in the challenge (READ-SEARCH-ASK etc).
@@ -119,6 +122,14 @@ behave (wrt to tab opening etc) okay */
 // formatFile(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md'
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// // tries to parse *
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/responsive-web-design-principles/create-a-media-query.english.md'
 // )
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
