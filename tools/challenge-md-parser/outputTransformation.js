@@ -66,11 +66,18 @@ const challengeDir = '../../curriculum/challenges/english';
 //   .then(prettify)
 //   .then(output => console.log(output));
 
+// // This one closes the section after the h4 tag.  Yikes.
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/balanced-brackets.english.md'
+// )
+//   .then(prettify)
+//   .then(output => console.log(output));
 
-// This one closes the section after the h4 tag.  Yikes.
+// This one didn't close the section tags
 formatFile(
   // eslint-disable-next-line
-  '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/balanced-brackets.english.md'
+  '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/100-doors.english.md'
 )
   .then(prettify)
   .then(output => console.log(output));

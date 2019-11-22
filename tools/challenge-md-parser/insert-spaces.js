@@ -4,6 +4,12 @@ const raw = require('hast-util-raw');
 const findAndReplace = require('hast-util-find-and-replace');
 const toHtml = require('hast-util-to-html');
 const isEmpty = require('lodash/isEmpty');
+const unified = require('unified');
+const vfile = require('vfile');
+
+const html = require('rehype-parse');
+
+const util = require('util');
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -37,6 +43,17 @@ no need to handle the case where the first line is not empty and markdown syntax
 will alway work.  The linter can check that the first blank line exists.
 */
 
+const parser = unified().use(html, {
+  emitParseErrors: true,
+  duplicateAttribute: false,
+  missingDoctype: false
+});
+
+
+function parseSync(text) {
+  return parser.parse(text, { emitParseErrors: true });
+}
+
 function plugin() {
   return transformer;
 
@@ -44,16 +61,33 @@ function plugin() {
     return visit(tree, 'html', visitor);
 
     function visitor(node) {
+      console.log('original node', node);
       // 'html' nodes contain un-parsed html strings, so we first convert them
       // to hast and then parse them to produce a syntax tree (so we can locate
       // and modify the instructions and description)
-      const section = raw(toHast(node, { allowDangerousHTML: true }));
+      const section = raw(toHast(node, { allowDangerousHTML: true }), {
+        emitParseErrors: true
+      });
       if (
         section.type === 'element' &&
         (section.properties.id === 'instructions' ||
           section.properties.id === 'description') &&
         !isEmpty(section.children)
       ) {
+        console.log('IN SECTION');
+        // ideally not regex, but if I have to:
+        const hasClosingTag = /<\/section>\s*$/.test(node.value);
+        // const test = parseSync('</section>');
+        // const invalidHtml = `<!doctype html>
+        // <title>abandoned-head-element-child</title>
+        // </head>
+        // <script>this.one.cant.be.here();</script>`
+        const file = vfile('<section>'); // This doesn't seem to emit errors.  Fuck.
+        const test = parseSync(file);
+        console.log('PARSED?', test);
+
+        console.log('Children?', test.children[0].children);
+        console.log('FILE?', file);
         // section contains the section tag and all the text up to the first
         // blank line.
 
@@ -67,7 +101,7 @@ function plugin() {
         // becomes standard markdown.
         findAndReplace(section, '\n', '\n\n');
 
-        // This comes from an unclosed <section>, so we have to pretend it's
+        // This can come from an unclosed <section>, so we have to pretend it's
         // a root element (otherwise it gets wrapped in a tag) and add the
         // opening <section> back in by hand.
         node.value =
