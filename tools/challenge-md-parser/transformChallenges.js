@@ -27,17 +27,7 @@ const fenceCode = unified()
   .use(stringify, { fences: true })
   .use(frontmatter, ['yaml']);
 
-
-  // TODO: none of my attempts to prettify are actually getting rid of trailing
-  // spaces.  WHHHHY?  I thought this would.  Presumably it doesn't because
-  // of the embedded html?  IDK.  Regardless, we don't need three runs.
-  // insert in one run and convert to backticks in another.
-const prettifyCode = unified()
-  .use(markdown)
-  .use(stringify, { fences: true })
-  .use(frontmatter, ['yaml']);
-
-exports.formatFile = function formatFile(filename) {
+exports.insertSpaces = function insertSpaces(filename) {
   return new Promise((resolve, reject) =>
     processor.process(vfile.readSync(filename), function(err, file) {
       if (err) {
@@ -52,18 +42,6 @@ exports.formatFile = function formatFile(filename) {
 exports.fenceText = function fenceText(text) {
   return new Promise((resolve, reject) =>
     fenceCode.process(text, function(err, file) {
-      if (err) {
-        err.message += ' in file ' + text;
-        reject(err);
-      }
-      return resolve(file.contents);
-    })
-  );
-};
-
-exports.prettifyText = function prettifyText(text) {
-  return new Promise((resolve, reject) =>
-    prettifyCode.process(text, function(err, file) {
       if (err) {
         err.message += ' in file ' + text;
         reject(err);

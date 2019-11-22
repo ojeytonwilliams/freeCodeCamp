@@ -4,7 +4,10 @@ const raw = require('hast-util-raw');
 const findAndReplace = require('hast-util-find-and-replace');
 const toHtml = require('hast-util-to-html');
 const isEmpty = require('lodash/isEmpty');
+const isEqual = require('lodash/isEqual');
 const dedent = require('dedent');
+
+const newLine = { type: 'text', value: '\n' };
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -60,10 +63,12 @@ function plugin() {
         // section contains the section tag and all the text up to the first
         // blank line.
 
-        // Next a newline needs inserting at the start, since this is needed
-        // to ensure the text will be parsed as markdown.
+        // There needs to be a newline at the start, to ensure that the text
+        // will be parsed as markdown.
 
-        section.children.unshift({ type: 'text', value: '\n' });
+        if (!isEqual(section.children[0], newLine)) {
+          section.children.unshift(newLine);
+        }
 
         // This replaces single line breaks with empty lines, so
         // that the section text that previously required special treatment
@@ -81,6 +86,7 @@ function plugin() {
             quote: "'"
           }
         );
+
         node.value = dedent`<section id='${section.properties.id}'>
           ${sectionContent}
           ${hasClosingTag ? `</section>\n` : ''}`;

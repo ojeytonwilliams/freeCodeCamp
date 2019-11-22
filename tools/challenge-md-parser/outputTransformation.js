@@ -1,24 +1,22 @@
 const {
-  formatFile: formatFile,
-  fenceText: codeToBackticks,
-  prettifyText: prettify
+  insertSpaces: formatFile,
+  fenceText: codeToBackticks
 } = require('./transformChallenges');
 const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
 
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//     formatFile(file.fullPath)
-//       .then(prettify)
-//       .then(text => fs.writeFileSync(file.fullPath, text))
-//       .catch(err => {
-//         console.log(file.path);
-//         // console.log('formatting err', err.message);
-//       });
-//   }
-// });
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    formatFile(file.fullPath)
+      .then(codeToBackticks)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(() => {
+        console.log(file.path);
+      });
+  }
+});
 
 // formatFile(
 //   // eslint-disable-next-line
@@ -117,11 +115,10 @@ const challengeDir = '../../curriculum/challenges/english';
 Those must be kept and perhaps should be converted to []() format, assuming they
 behave (wrt to tab opening etc) okay */
 
-// link inside code tags
-formatFile(
-  // eslint-disable-next-line
-  '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md'
-)
-  .then(codeToBackticks)
-  .then(prettify)
-  .then(output => console.log(output));
+// // link inside code tags
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md'
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
