@@ -40,10 +40,13 @@ const challengeDir = '../../curriculum/challenges/english';
 //   '../../curriculum/challenges/portuguese/02-javascript-algorithms-and-data-structures/basic-javascript/returning-boolean-values-from-functions.portuguese.md'
 // ).then(output => console.log(output));
 
-// formatFile(
-//   // eslint-disable-next-line
-//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
-// ).then(output => console.log(output));
+// This one turns links *inside code blocks* into anchors
+formatFile(
+  // eslint-disable-next-line
+  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
+)
+  .then(prettify)
+  .then(output => console.log(output));
 
 // formatFile(
 //   // eslint-disable-next-line
@@ -74,10 +77,10 @@ const challengeDir = '../../curriculum/challenges/english';
 //   .then(prettify)
 //   .then(output => console.log(output));
 
-// This one didn't close the section tags
-formatFile(
-  // eslint-disable-next-line
-  '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/100-doors.english.md'
-)
-  .then(prettify)
-  .then(output => console.log(output));
+// // This one didn't close the section tags
+// formatFile(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/100-doors.english.md'
+// )
+//   .then(prettify)
+//   .then(output => console.log(output));

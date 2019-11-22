@@ -8,6 +8,7 @@ const inlineCode = require('hast-util-to-mdast/lib/handlers/inline-code');
 function codeToInline(h, node) {
   if (node.children.length > 1) {
     console.log('Leaving code block as it does not just contain text');
+    throw Error('Too many children');
     return {
       type: 'html',
       value: toHtml(node, {
