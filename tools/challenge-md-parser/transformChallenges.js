@@ -7,10 +7,9 @@ const stringify = require('remark-stringify');
 const insertSpaces = require('./insert-spaces');
 const codeToBackticks = require('./code-to-backticks');
 
-const processor = unified()
+const insertSpacesProcessor = unified()
   .use(markdown)
   .use(insertSpaces)
-
   .use(stringify, { fences: true })
   .use(frontmatter, ['yaml']);
 // ^ Prevents the frontmatter being modified
@@ -21,32 +20,27 @@ const processor = unified()
 // via angle brackets!
 // UPDATE: turns out that links inside <code> blocks are converted into anchor
 // elements... Not ideal!
-const fenceCode = unified()
+const codeToBackticksProcessor = unified()
   .use(markdown)
   .use(codeToBackticks)
   .use(stringify, { fences: true })
   .use(frontmatter, ['yaml']);
 
-exports.insertSpaces = function insertSpaces(filename) {
-  return new Promise((resolve, reject) =>
-    processor.process(vfile.readSync(filename), function(err, file) {
-      if (err) {
-        err.message += ' in file ' + filename;
-        reject(err);
-      }
-      return resolve(file.contents);
-    })
-  );
-};
+exports.insertSpaces = createProcessor(insertSpacesProcessor);
 
-exports.fenceText = function fenceText(text) {
-  return new Promise((resolve, reject) =>
-    fenceCode.process(text, function(err, file) {
-      if (err) {
-        err.message += ' in file ' + text;
-        reject(err);
-      }
-      return resolve(file.contents);
-    })
-  );
-};
+exports.codeToBackticks = createProcessor(codeToBackticksProcessor);
+
+function createProcessor(processor) {
+  return (msg, isFile = false) => {
+    const fileOrText = isFile ? vfile.readSync(msg) : msg;
+    return new Promise((resolve, reject) =>
+      processor.process(fileOrText, function(err, file) {
+        if (err) {
+          err.message += ' in file ' + msg;
+          reject(err);
+        }
+        return resolve(file.contents);
+      })
+    );
+  };
+}

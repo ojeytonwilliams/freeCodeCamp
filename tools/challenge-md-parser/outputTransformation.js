@@ -1,70 +1,68 @@
-const {
-  insertSpaces: formatFile,
-  fenceText: codeToBackticks
-} = require('./transformChallenges');
+const { insertSpaces, codeToBackticks } = require('./transformChallenges');
 const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
-todo consider two conversion to code passes, once before inserting spaces onces after
-NOTE this doesn't solve the problem of bare urls, but it might deal with links inside
-code blocks MAAAAYBE.
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//     formatFile(file.fullPath)
-//       .then(codeToBackticks)
-//       .then(text => fs.writeFileSync(file.fullPath, text))
-//       .catch(() => {
-//         console.log(file.path);
-//       });
-//   }
-// });
+// todo consider two conversion to code passes, once before inserting spaces onces after
+// NOTE this doesn't solve the problem of bare urls, but it might deal with links inside
+// code blocks MAAAAYBE.
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    insertSpaces(file.fullPath, true)
+      .then(codeToBackticks)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(() => {
+        console.log(file.path);
+      });
+  }
+});
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/09-certificates/responsive-web-design-certificate/responsive-web-design-certificate.english.md'
 // ).then(output => console.log(output));
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/say-hello-to-html-elements.english.md'
 // )
 //   .then(prettify)
 //   .then(output => console.log(output));
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/take-home-projects/build-a-camper-leaderboard.english.md'
 // ).then(output => console.log(output));
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/portuguese/02-javascript-algorithms-and-data-structures/basic-javascript/returning-boolean-values-from-functions.portuguese.md'
 // ).then(output => console.log(output));
 
 // This one turns links *inside code blocks* into anchors
-formatFile(
+insertSpaces(
   // eslint-disable-next-line
-  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md'
+  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md',
+  true
 )
   // .then(codeToBackticks)
   .then(output => console.log(output));
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/russian/01-responsive-web-design/basic-css/cascading-css-variables.russian.md'
 // ).then(output => console.log(output));
 
 // NOTE: the next one has an unterminated code block!
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/data-structures/search-within-a-linked-list.english.md'
 // )
 //   .then(prettify)
 //   .then(output => console.log(output));
 
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/sort-disjoint-sublist.english.md'
 // )
@@ -72,7 +70,7 @@ formatFile(
 //   .then(output => console.log(output));
 
 // // This one closes the section after the h4 tag.  Yikes.
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/balanced-brackets.english.md'
 // )
@@ -80,7 +78,7 @@ formatFile(
 //   .then(output => console.log(output));
 
 // // This one didn't close the section tags
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/100-doors.english.md'
 // )
@@ -119,7 +117,7 @@ Those must be kept and perhaps should be converted to []() format, assuming they
 behave (wrt to tab opening etc) okay */
 
 // // link inside code tags
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md'
 // )
@@ -127,7 +125,7 @@ behave (wrt to tab opening etc) okay */
 //   .then(output => console.log(output));
 
 // // tries to parse *
-// formatFile(
+// insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/01-responsive-web-design/responsive-web-design-principles/create-a-media-query.english.md'
 // )
