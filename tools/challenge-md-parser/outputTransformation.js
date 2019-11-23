@@ -3,19 +3,17 @@ const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
-// todo consider two conversion to code passes, once before inserting spaces onces after
-// NOTE this doesn't solve the problem of bare urls, but it might deal with links inside
-// code blocks MAAAAYBE.
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//     insertSpaces(file.fullPath, true)
-//       .then(codeToBackticks)
-//       .then(text => fs.writeFileSync(file.fullPath, text))
-//       .catch(() => {
-//         console.log(file.path);
-//       });
-//   }
-// });
+// TODO: bare urls should not be parsed (probably)
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    insertSpaces(file.fullPath, true)
+      .then(codeToBackticks)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(() => {
+        console.log(file.path);
+      });
+  }
+});
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -116,19 +114,28 @@ const challengeDir = '../../curriculum/challenges/english';
 Those must be kept and perhaps should be converted to []() format, assuming they
 behave (wrt to tab opening etc) okay */
 
-// link inside code tags
-insertSpaces(
-  // eslint-disable-next-line
-  '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md',
-  true
-)
- .then(codeToBackticks)
-  .then(output => console.log(output));
+// // link inside code tags
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md',
+//   true
+// )
+//  .then(codeToBackticks)
+//   .then(output => console.log(output));
 
 // // tries to parse *
 // insertSpaces(
 //   // eslint-disable-next-line
 //   '../../curriculum/challenges/english/01-responsive-web-design/responsive-web-design-principles/create-a-media-query.english.md'
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// // trying to make sure that markdown syntax in the original html is escaped.
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/say-hello-to-html-elements.english.md',
+//   true
 // )
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));

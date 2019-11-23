@@ -1,3 +1,4 @@
+const unified = require('unified');
 const visit = require('unist-util-visit');
 const toHast = require('mdast-util-to-hast');
 const raw = require('hast-util-raw');
@@ -6,6 +7,8 @@ const toHtml = require('hast-util-to-html');
 const isEmpty = require('lodash/isEmpty');
 const isEqual = require('lodash/isEqual');
 const dedent = require('dedent');
+const hastToMdast = require('hast-util-to-mdast');
+const remarkStringify = require('remark-stringify');
 
 const newLine = { type: 'text', value: '\n' };
 
@@ -41,6 +44,27 @@ no need to handle the case where the first line is not empty and markdown syntax
 will alway work.  The linter can check that the first blank line exists.
 */
 
+var compiler = unified().use(remarkStringify);
+
+function stringify(mdast) {
+  return compiler.stringify(mdast);
+}
+
+function escape(hast) {
+  if (hast.value === '\n\n') return hast;
+  // A trailing space gets converted to \n, because hastToMdast will be told
+  // told this is a paragraph, which it isn't
+  const trailingSpace = / /.test(hast.value[hast.value.length - 1]);
+  // fake a hast tree.  Is there a less hacky approach?
+  const hastTree = {
+    type: 'root',
+    children: [{ type: 'paragraph', children: [hast] }]
+  };
+  let value = stringify(hastToMdast(hastTree));
+  if (trailingSpace) value = value.slice(0, -1) + ' ';
+  return { type: 'text', value };
+}
+
 function plugin() {
   return transformer;
 
@@ -48,7 +72,6 @@ function plugin() {
     return visit(tree, 'html', visitor);
 
     function visitor(node) {
-      // console.log('original node', node);
       // 'html' nodes contain un-parsed html strings, so we first convert them
       // to hast and then parse them to produce a syntax tree (so we can locate
       // and modify the instructions and description)
@@ -59,6 +82,8 @@ function plugin() {
           section.properties.id === 'description') &&
         !isEmpty(section.children)
       ) {
+        // console.log('original node', node);
+        // console.log('hastified', sectionHastOnly);
         const hasClosingTag = /<\/section>\s*$/.test(node.value);
         // section contains the section tag and all the text up to the first
         // blank line.
@@ -73,7 +98,29 @@ function plugin() {
         // This replaces single line breaks with empty lines, so
         // that the section text that previously required special treatment
         // becomes standard markdown.
+
+        // TODO sometimes this, or findAndReplace is adding too many new lines
+        // and somehow the closing tag is getting indented enough to be
+        // treated as code.
+        if (!isEqual(section.children[0], newLine)) {
+          section.children.unshift(newLine);
+        }
+
         findAndReplace(section, '\n', '\n\n');
+
+        // next we escape the markdown, so that syntax like * doesn't suddenly
+        // start altering the formatting.
+
+        // TODO: I think it needs to handle leading spaces, too, since
+        // text after a code block isn't keeping its space.
+
+        section.children = section.children.map(child => {
+          if (child.type === 'text') {
+            return escape(child);
+          } else {
+            return child;
+          }
+        });
 
         // This can come from an unclosed <section>, so we have to pretend it's
         // a root element (otherwise it gets wrapped in a tag) and add the
@@ -86,8 +133,6 @@ function plugin() {
             quote: "'"
           }
         );
-
-        console.log('section content', sectionContent)
 
         node.value = dedent`<section id='${section.properties.id}'>
           ${sectionContent}

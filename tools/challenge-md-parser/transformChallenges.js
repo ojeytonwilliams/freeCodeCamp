@@ -14,12 +14,22 @@ const insertSpacesProcessor = unified()
   .use(frontmatter, ['yaml']);
 // ^ Prevents the frontmatter being modified
 
-// TODO: either the processor or the prettifier (or both) is converting
-// characters into html entities.
 // TODO: they are also making links inside <code> blocks into clickable links
 // via angle brackets!
-// UPDATE: turns out that links inside <code> blocks are converted into anchor
-// elements... Not ideal!
+
+// TODO: how do we tell if text in the first paragraph of section (i.e. the code
+// that's currently treated differently by the fcc parser) has markdown inside
+// it?  i.e. imagine we have
+//
+
+/*
+  <em>Em</em> or *em*?
+
+*/
+
+// The fcc parser will use the tags to create italics, but leave the stars in.
+// Is there an mdast raw equivalent?  i.e. please don't process this!
+
 const codeToBackticksProcessor = unified()
   .use(markdown)
   .use(codeToBackticks)
