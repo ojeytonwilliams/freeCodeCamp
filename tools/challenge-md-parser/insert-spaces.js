@@ -87,6 +87,8 @@ function plugin() {
           }
         );
 
+        console.log('section content', sectionContent)
+
         node.value = dedent`<section id='${section.properties.id}'>
           ${sectionContent}
           ${hasClosingTag ? `</section>\n` : ''}`;

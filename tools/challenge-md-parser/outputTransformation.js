@@ -6,16 +6,16 @@ const challengeDir = '../../curriculum/challenges/english';
 // todo consider two conversion to code passes, once before inserting spaces onces after
 // NOTE this doesn't solve the problem of bare urls, but it might deal with links inside
 // code blocks MAAAAYBE.
-readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-  if (file.stat.isFile()) {
-    insertSpaces(file.fullPath, true)
-      .then(codeToBackticks)
-      .then(text => fs.writeFileSync(file.fullPath, text))
-      .catch(() => {
-        console.log(file.path);
-      });
-  }
-});
+// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+//   if (file.stat.isFile()) {
+//     insertSpaces(file.fullPath, true)
+//       .then(codeToBackticks)
+//       .then(text => fs.writeFileSync(file.fullPath, text))
+//       .catch(() => {
+//         console.log(file.path);
+//       });
+//   }
+// });
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -39,14 +39,14 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 //   '../../curriculum/challenges/portuguese/02-javascript-algorithms-and-data-structures/basic-javascript/returning-boolean-values-from-functions.portuguese.md'
 // ).then(output => console.log(output));
 
-// This one turns links *inside code blocks* into anchors
-insertSpaces(
-  // eslint-disable-next-line
-  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md',
-  true
-)
-  // .then(codeToBackticks)
-  .then(output => console.log(output));
+// // This one turns links *inside code blocks* into anchors
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md',
+//   true
+// )
+//   // .then(codeToBackticks)
+//   .then(output => console.log(output));
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -116,13 +116,14 @@ insertSpaces(
 Those must be kept and perhaps should be converted to []() format, assuming they
 behave (wrt to tab opening etc) okay */
 
-// // link inside code tags
-// insertSpaces(
-//   // eslint-disable-next-line
-//   '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md'
-// )
-//   .then(codeToBackticks)
-//   .then(output => console.log(output));
+// link inside code tags
+insertSpaces(
+  // eslint-disable-next-line
+  '../../curriculum/challenges/english/03-front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator.english.md',
+  true
+)
+ .then(codeToBackticks)
+  .then(output => console.log(output));
 
 // // tries to parse *
 // insertSpaces(

@@ -19,6 +19,9 @@ function codeToInline(h, node) {
       })
     };
   } else {
+    console.log('processing inline code');
+    console.log(node);
+
     return inlineCode(h, node);
   }
 }
@@ -30,7 +33,7 @@ function plugin() {
     visit(tree, 'paragraph', visitor);
 
     function visitor(node, id, parent) {
-      console.log('NODE', node); // HERE: it's already a link at this point.
+      // console.log('NODE', node); // HERE: it's already a link at this point.
       const paragraph = raw(toHast(node, { allowDangerousHTML: true }));
       console.log('PARAGRAPH', paragraph);
       parent.children[id] = toMdast(paragraph, {
