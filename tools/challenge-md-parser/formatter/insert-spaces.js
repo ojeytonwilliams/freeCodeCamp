@@ -2,7 +2,6 @@ const unified = require('unified');
 const visit = require('unist-util-visit');
 const toHast = require('mdast-util-to-hast');
 const raw = require('hast-util-raw');
-const findAndReplace = require('hast-util-find-and-replace');
 const toHtml = require('hast-util-to-html');
 const isEmpty = require('lodash/isEmpty');
 const isEqual = require('lodash/isEqual');

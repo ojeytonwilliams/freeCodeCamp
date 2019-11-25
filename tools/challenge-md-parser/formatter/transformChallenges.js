@@ -5,7 +5,7 @@ const frontmatter = require('remark-frontmatter');
 const stringify = require('remark-stringify');
 
 const insertSpaces = require('./insert-spaces');
-const codeToBackticks = require('./code-to-backticks');
+const codeToBackticks = require('../code-to-backticks');
 
 const insertSpacesProcessor = unified()
   .use(markdown)
