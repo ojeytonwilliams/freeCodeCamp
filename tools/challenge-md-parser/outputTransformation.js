@@ -4,16 +4,16 @@ const fs = require('fs');
 
 const challengeDir = '../../curriculum/challenges/english';
 // TODO: bare urls should not be parsed (probably)
-readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-  if (file.stat.isFile()) {
-    insertSpaces(file.fullPath, true)
-      .then(codeToBackticks)
-      .then(text => fs.writeFileSync(file.fullPath, text))
-      .catch(() => {
-        console.log(file.path);
-      });
-  }
-});
+// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+//   if (file.stat.isFile()) {
+//     insertSpaces(file.fullPath, true)
+//       .then(codeToBackticks)
+//       .then(text => fs.writeFileSync(file.fullPath, text))
+//       .catch(() => {
+//         console.log(file.path);
+//       });
+//   }
+// });
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -22,9 +22,10 @@ readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
 
 // insertSpaces(
 //   // eslint-disable-next-line
-//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/say-hello-to-html-elements.english.md'
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/say-hello-to-html-elements.english.md',
+//   true
 // )
-//   .then(prettify)
+//   // .then(codeToBackticks)
 //   .then(output => console.log(output));
 
 // insertSpaces(
@@ -139,3 +140,49 @@ behave (wrt to tab opening etc) okay */
 // )
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
+
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/averages-pythagorean-means.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// // Instructions did not break paragraphs.
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/inform-with-the-paragraph-element.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// // Did not break after a code block
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/add-images-to-your-website.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// Reformated a pre...
+
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/9-billion-names-of-god-the-integer.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// added spaces around 'anchor'
+
+insertSpaces(
+  // eslint-disable-next-line
+  '../../curriculum/challenges/english/01-responsive-web-design/basic-html-and-html5/link-to-external-pages-with-anchor-elements.english.md',
+  true
+)
+  // .then(codeToBackticks)
+  .then(output => console.log(output));
