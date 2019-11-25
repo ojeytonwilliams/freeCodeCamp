@@ -8,9 +8,12 @@ const { insertSpaces, codeToBackticks } = require('./transformChallenges');
 const fixtures = ['billion-names.md', 'link-internal.md'];
 
 describe('Challenge formatter', () => {
-  it('should transform challenges into GFM correctly', () => {
-    const tests = fixtures.map(fixture =>
-      insertSpaces(path.resolve(__dirname, '__fixtures__/' + fixture), true)
+  fixtures.forEach(fixture =>
+    it(`should transform ${fixture} into GFM correctly`, () => {
+      return insertSpaces(
+        path.resolve(__dirname, '__fixtures__/' + fixture),
+        true
+      )
         .then(codeToBackticks)
         .then(output => {
           const formattedMd = fs.readFileSync(
@@ -20,9 +23,7 @@ describe('Challenge formatter', () => {
             }
           );
           expect(output).toEqual(formattedMd);
-        })
-    );
-
-    return Promise.all(tests);
-  });
+        });
+    })
+  );
 });
