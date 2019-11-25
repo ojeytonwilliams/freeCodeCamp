@@ -4,16 +4,16 @@ const fs = require('fs');
 
 const challengeDir = '../../../curriculum/challenges/english';
 // TODO: bare urls should not be parsed (probably)
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//   insertSpaces(file.fullPath, true)
-//     .then(codeToBackticks)
-//     .then(text => fs.writeFileSync(file.fullPath, text))
-//     .catch(() => {
-//       console.log(file.path);
-//     });
-// }
-// });
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    insertSpaces(file.fullPath, true)
+      .then(codeToBackticks)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(() => {
+        console.log(file.path);
+      });
+  }
+});
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -167,15 +167,15 @@ behave (wrt to tab opening etc) okay */
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
 
-// Reformated a pre...
+// // Reformated a pre...
 
-insertSpaces(
-  // eslint-disable-next-line
-  '../../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/9-billion-names-of-god-the-integer.english.md',
-  true
-)
-  .then(codeToBackticks)
-  .then(output => console.log(output));
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/9-billion-names-of-god-the-integer.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
 
 // // added spaces around 'anchor'
 
