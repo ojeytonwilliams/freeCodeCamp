@@ -10,6 +10,7 @@ const hastToMdast = require('hast-util-to-mdast');
 const remarkStringify = require('remark-stringify');
 
 const newLine = { type: 'text', value: '\n' };
+const blankLine = { type: 'text', value: '\n\n' };
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -49,13 +50,8 @@ function stringify(mdast) {
   return compiler.stringify(mdast);
 }
 
-// TODO: add a bunch of unit tests (for the various functions) and acceptance tests
-// i.e. does the final, prettified version work?  The acceptance tests should be
-// the various markdown files you've found not to work (at some point) in case
-// further changes break what once was working.
-
-function escape(hast) {
-  if (hast.value === '\n\n') return hast;
+function escapeMd(hast) {
+  if (hast.value === '\n') return hast;
   // A trailing space gets converted to \n, because hastToMdast will be told
   // told this is a paragraph, which it isn't
   const trailingSpace = / /.test(hast.value[hast.value.length - 1]);
@@ -68,9 +64,10 @@ function escape(hast) {
     children: [{ type: 'paragraph', children: [hast] }]
   };
   let value = stringify(hastToMdast(hastTree));
-  // TODO: It might be necessary to always remove the last character, since
-  // it seems to always put a \n in there.
-  if (trailingSpace) value = value.slice(0, -1) + ' ';
+  // It's necessary to always remove the last character, it escaping always puts
+  // a \n in there.
+  value = value.slice(0, -1);
+  if (trailingSpace) value += ' ';
   if (leadingSpace) value = ' ' + value;
   return { type: 'text', value };
 }
@@ -87,16 +84,13 @@ function getParagraphs(node) {
     return node;
   }
 
+  paragraphs = paragraphs.filter(({ value }) => value !== '');
+
   const children = paragraphs.reduce((acc, curr) => {
-    if (curr === '') {
-      // just a new line, no need to insert an empty text node.
-      return acc.concat(newLine);
-    } else {
-      // NOTE: order matters, here, since we need paragraphs that follow on
-      // from html elements to have two linebreaks:
-      return acc.concat([newLine, { type: 'text', value: curr }]);
-    }
+    return acc.concat([{ type: 'text', value: curr }, blankLine]);
   }, []);
+  // Remove the trailing newLine.
+  children.pop();
   return children;
 }
 
@@ -137,7 +131,7 @@ function plugin() {
         }
 
         // should be flatMap, but it's introduced in node 11
-        //  console.log('before', section);
+        // console.log('before', section);
         // break the lines into paragraphs
         section.children = section.children.reduce(
           (acc, child) =>
@@ -149,13 +143,13 @@ function plugin() {
         // next we escape the markdown, so that syntax like * doesn't suddenly
         // start altering the formatting.
 
-        section.children = section.children.map(child => {
-          if (child.type === 'text') {
-            return escape(child);
-          } else {
-            return child;
-          }
-        });
+        // section.children = section.children.map(child => {
+        //   if (child.type === 'text') {
+        //     return escapeMd(child);
+        //   } else {
+        //     return child;
+        //   }
+        // });
 
         // console.log('escaped', section);
 
@@ -179,4 +173,6 @@ function plugin() {
   }
 }
 
-module.exports = plugin;
+exports.insertSpaces = plugin;
+exports.escapeMd = escapeMd;
+exports.getParagraphs = getParagraphs;

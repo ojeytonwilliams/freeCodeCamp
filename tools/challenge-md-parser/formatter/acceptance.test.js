@@ -5,7 +5,12 @@ const path = require('path');
 
 const { insertSpaces, codeToBackticks } = require('./transformChallenges');
 
-const fixtures = ['billion-names.md', 'link-internal.md'];
+const fixtures = [
+  'hello.md',
+  'billion-names.md',
+  'link-internal.md',
+  'drum-machine.md'
+];
 
 describe('Challenge formatter', () => {
   fixtures.forEach(fixture =>
