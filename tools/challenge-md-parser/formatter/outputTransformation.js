@@ -221,9 +221,9 @@ behave (wrt to tab opening etc) okay */
 
 insertSpaces(
   // eslint-disable-next-line
-  './__fixtures__/link-external.md',
+  './__fixtures__/dead-links.md',
   true
 )
-  .then(codeToBackticks)
+  // .then(codeToBackticks)
   .then(prettify)
   .then(output => console.log(output));

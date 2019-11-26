@@ -43,6 +43,12 @@ describe('insert-spaces', () => {
       const newLine = { type: 'text', value: '\n\n' };
       expect(escapeMd(newLine)).toEqual(newLine);
     });
+
+    it('should encode urls', () => {
+      const url = { type: 'text', value: 'https://example.com' };
+      const expected = { type: 'text', value: 'https&#x3A;//example.com' };
+      expect(escapeMd(url)).toEqual(expected);
+    });
   });
 
   describe('sectionFromTemplate', () => {
