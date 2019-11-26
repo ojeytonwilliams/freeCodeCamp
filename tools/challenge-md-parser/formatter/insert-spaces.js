@@ -146,9 +146,6 @@ function plugin() {
         //      // .map(child => child.children)
         // );
 
-        section.children
-          .filter(({ type }) => type === 'element')
-          .forEach(child => console.log('WHAT?', child));
         // break the lines into paragraphs
         section.children = section.children.reduce(
           (acc, child) =>

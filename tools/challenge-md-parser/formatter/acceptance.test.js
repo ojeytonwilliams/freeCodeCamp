@@ -21,6 +21,8 @@ const { insertSpaces, codeToBackticks } = require('./transformChallenges');
 */
 // so the html parser trims any leading spaces.
 const fixtures = [
+  'dead-links.md',
+  'nest-anchor.md',
   'hello.md',
   'billion-names.md',
   'link-internal.md',
