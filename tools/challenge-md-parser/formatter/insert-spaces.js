@@ -51,7 +51,8 @@ function stringify(mdast) {
 }
 
 function escapeMd(hast) {
-  if (hast.value === '\n') return hast;
+  // These are added by getParagraphs so must not be touched
+  if (hast.value === '\n\n') return hast;
   // A trailing space gets converted to \n, because hastToMdast will be told
   // told this is a paragraph, which it isn't
   const trailingSpace = / /.test(hast.value[hast.value.length - 1]);
@@ -64,8 +65,7 @@ function escapeMd(hast) {
     children: [{ type: 'paragraph', children: [hast] }]
   };
   let value = stringify(hastToMdast(hastTree));
-  // It's necessary to always remove the last character, it escaping always puts
-  // a \n in there.
+  // Removing the last character is always necessary, since stringify appends \n
   value = value.slice(0, -1);
   if (trailingSpace) value += ' ';
   if (leadingSpace) value = ' ' + value;
@@ -84,20 +84,26 @@ function getParagraphs(node) {
     return node;
   }
 
-  paragraphs = paragraphs.filter(({ value }) => value !== '');
-
-  const children = paragraphs.reduce((acc, curr) => {
+  let children = paragraphs.reduce((acc, curr) => {
     return acc.concat([{ type: 'text', value: curr }, blankLine]);
   }, []);
+
+  children = children.filter(({ value }) => value !== '');
+
   // Remove the trailing newLine.
   children.pop();
   return children;
 }
 
+// NOTE: tried dedent, but I couldn't get it to reliably format pre elements.
 function sectionFromTemplate(section, sectionContent, closingTag) {
-  return dedent`<section id='${section.properties.id}'>
-${sectionContent}
-${closingTag}`;
+  return (
+    `<section id='${section.properties.id}'>` +
+    '\n' +
+    sectionContent +
+    '\n' +
+    closingTag
+  );
 }
 
 function plugin() {
@@ -126,30 +132,47 @@ function plugin() {
         // becomes standard markdown.
 
         // Has to start with an empty line
-        if (!isEqual(section.children[0], newLine)) {
-          section.children.unshift(newLine);
-        }
+        // if (!isEqual(section.children[0], newLine)) {
+        section.children.unshift(blankLine);
+        // }
 
         // should be flatMap, but it's introduced in node 11
         // console.log('before', section);
+
+        // console.log(
+        //   'ELEMENTS',
+        //   section.children
+        //     .filter(({ type }) => type === 'element')
+        //      // .map(child => child.children)
+        // );
+
+        section.children
+          .filter(({ type }) => type === 'element')
+          .forEach(child => console.log('WHAT?', child));
         // break the lines into paragraphs
         section.children = section.children.reduce(
           (acc, child) =>
             acc.concat(child.type === 'text' ? getParagraphs(child) : [child]),
           []
         );
+        // console.log(
+        //   'ELEMENTS AFTER',
+        //   section.children
+        //     .filter(({ type }) => type === 'element')
+        //     .map(child => child.children)
+        // );
         // console.log('after', section);
 
         // next we escape the markdown, so that syntax like * doesn't suddenly
         // start altering the formatting.
 
-        // section.children = section.children.map(child => {
-        //   if (child.type === 'text') {
-        //     return escapeMd(child);
-        //   } else {
-        //     return child;
-        //   }
-        // });
+        section.children = section.children.map(child => {
+          if (child.type === 'text') {
+            return escapeMd(child);
+          } else {
+            return child;
+          }
+        });
 
         // console.log('escaped', section);
 
@@ -164,10 +187,13 @@ function plugin() {
             quote: "'"
           }
         );
+        // console.log('STRINGIFIED SECTION CONTENT', sectionContent);
+        // console.log('STRINGIFIED ORIGINAL SECTION', toHtml(section));
 
         const closingTag = hasClosingTag ? '</section>\n' : '';
 
         node.value = sectionFromTemplate(section, sectionContent, closingTag);
+        // console.log('FROM TEMPLATE', node.value);
       }
     }
   }

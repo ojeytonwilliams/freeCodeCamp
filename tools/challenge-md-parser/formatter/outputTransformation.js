@@ -169,13 +169,13 @@ behave (wrt to tab opening etc) okay */
 
 // Reformated a pre...
 
-insertSpaces(
-  // eslint-disable-next-line
-  '../../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/9-billion-names-of-god-the-integer.english.md',
-  true
-)
-  // .then(codeToBackticks)
-  .then(output => console.log(output));
+// insertSpaces(
+//   // eslint-disable-next-line
+//   '../../../curriculum/challenges/english/08-coding-interview-prep/rosetta-code/9-billion-names-of-god-the-integer.english.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
 
 // // added spaces around 'anchor'
 
@@ -186,3 +186,13 @@ insertSpaces(
 // )
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
+
+// // not converting code to backticks
+
+insertSpaces(
+  // eslint-disable-next-line
+  './__fixtures__/link-internal.md',
+  true
+)
+  .then(codeToBackticks)
+  .then(output => console.log(output));

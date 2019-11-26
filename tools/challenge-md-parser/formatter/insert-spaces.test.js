@@ -4,7 +4,7 @@ const { escapeMd, getParagraphs } = require('./insert-spaces');
 
 describe('insert-spaces', () => {
   describe('getParagraphs', () => {
-    it('shouldreturn a node unchanged if it has no newlines', () => {
+    it('should return a node unchanged if it has no newlines', () => {
       const oneLine = { type: 'text', value: 'ab' };
       expect(getParagraphs(oneLine)).toEqual(oneLine);
     });
@@ -23,6 +23,14 @@ describe('insert-spaces', () => {
       ];
       expect(getParagraphs(twoLines)).toEqual(expected);
     });
+    it('should give a sentence starting \\n a starting blank line', () => {
+      const startingNewline = { type: 'text', value: '\na' };
+      const expected = [
+        { type: 'text', value: '\n\n' },
+        { type: 'text', value: 'a' }
+      ];
+      expect(getParagraphs(startingNewline)).toEqual(expected);
+    });
   });
 
   describe('escapeMd', () => {
@@ -30,91 +38,14 @@ describe('insert-spaces', () => {
       const alreadyEscaped = { type: 'text', value: 'hi!' };
       expect(escapeMd(alreadyEscaped)).toEqual(alreadyEscaped);
     });
-    it('should not escape a single newline', () => {
-      // this is how we're splitting up the paragraphs
-      const newLine = { type: 'text', value: '\n' };
+    it('should not escape a double newline', () => {
+      // they're needed to separate the paragraphs
+      const newLine = { type: 'text', value: '\n\n' };
       expect(escapeMd(newLine)).toEqual(newLine);
     });
   });
+
+  describe('sectionFromTemplate', () => {
+    it('should indent correctly', () => {});
+  });
 });
-
-function sectionFromTemplate(section, sectionContent, closingTag) {
-  return dedent`<section id='${section.properties.id}'>
-${sectionContent}
-${closingTag}`;
-}
-
-function plugin() {
-  return transformer;
-
-  function transformer(tree) {
-    return visit(tree, 'html', visitor);
-
-    function visitor(node) {
-      // 'html' nodes contain un-parsed html strings, so we first convert them
-      // to hast and then parse them to produce a syntax tree (so we can locate
-      // and modify the instructions and description)
-      const section = raw(toHast(node, { allowDangerousHTML: true }));
-      if (
-        section.type === 'element' &&
-        (section.properties.id === 'instructions' ||
-          section.properties.id === 'description') &&
-        !isEmpty(section.children)
-      ) {
-        const hasClosingTag = /<\/section>\s*$/.test(node.value);
-        // section contains the section tag and all the text up to the first
-        // blank line.
-
-        // This replaces single line breaks with empty lines, so
-        // that the section text that previously required special treatment
-        // becomes standard markdown.
-
-        // Has to start with an empty line
-        if (!isEqual(section.children[0], newLine)) {
-          section.children.unshift(newLine);
-        }
-
-        // should be flatMap, but it's introduced in node 11
-        //  console.log('before', section);
-        // break the lines into paragraphs
-        section.children = section.children.reduce(
-          (acc, child) =>
-            acc.concat(child.type === 'text' ? getParagraphs(child) : [child]),
-          []
-        );
-        // console.log('after', section);
-
-        // next we escape the markdown, so that syntax like * doesn't suddenly
-        // start altering the formatting.
-
-        section.children = section.children.map(child => {
-          if (child.type === 'text') {
-            return escapeMd(child);
-          } else {
-            return child;
-          }
-        });
-
-        // console.log('escaped', section);
-
-        // This can come from an unclosed <section>, so we have to pretend it's
-        // a root element (otherwise it gets wrapped in a tag) and add the
-        // opening <section> back in by hand.
-        const sectionContent = toHtml(
-          { type: 'root', children: section.children },
-          {
-            allowDangerousCharacters: true,
-            allowDangerousHTML: true,
-            quote: "'"
-          }
-        );
-
-        const closingTag = hasClosingTag ? '</section>\n' : '';
-
-        node.value = sectionFromTemplate(section, sectionContent, closingTag);
-      }
-    }
-  }
-}
-
-module.exports = plugin;

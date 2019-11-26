@@ -5,6 +5,21 @@ const path = require('path');
 
 const { insertSpaces, codeToBackticks } = require('./transformChallenges');
 
+// NOTE: As far as html rendering is concerned, it doesn't matter if you write
+
+/*
+<pre>  two spaces
+</pre>
+*/
+
+// or
+
+/*
+<pre>
+  two spaces
+</pre>
+*/
+// so the html parser trims any leading spaces.
 const fixtures = [
   'hello.md',
   'billion-names.md',
