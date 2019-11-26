@@ -17,28 +17,22 @@ const insertSpacesProcessor = unified()
 // TODO: they are also making links inside <code> blocks into clickable links
 // via angle brackets!
 
-// TODO: how do we tell if text in the first paragraph of section (i.e. the code
-// that's currently treated differently by the fcc parser) has markdown inside
-// it?  i.e. imagine we have
-//
-
-/*
-  <em>Em</em> or *em*?
-
-*/
-
-// The fcc parser will use the tags to create italics, but leave the stars in.
-// Is there an mdast raw equivalent?  i.e. please don't process this!
-
 const codeToBackticksProcessor = unified()
   .use(markdown)
   .use(codeToBackticks)
   .use(stringify, { fences: true })
   .use(frontmatter, ['yaml']);
 
+const prettifyProcessor = unified()
+  .use(markdown)
+  .use(stringify, { fences: true })
+  .use(frontmatter, ['yaml']);
+
 exports.insertSpaces = createProcessor(insertSpacesProcessor);
 
 exports.codeToBackticks = createProcessor(codeToBackticksProcessor);
+
+exports.prettify = createProcessor(prettifyProcessor);
 
 function createProcessor(processor) {
   return (msg, isFile = false) => {

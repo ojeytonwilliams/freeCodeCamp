@@ -3,7 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const { insertSpaces, codeToBackticks } = require('./transformChallenges');
+const {
+  insertSpaces,
+  codeToBackticks,
+  prettify
+} = require('./transformChallenges');
 
 // NOTE: As far as html rendering is concerned, it doesn't matter if you write
 
@@ -37,6 +41,7 @@ describe('Challenge formatter', () => {
         true
       )
         .then(codeToBackticks)
+        .then(prettify)
         .then(output => {
           const formattedMd = fs.readFileSync(
             path.resolve(__dirname, '__fixtures__/' + fixture + '.formatted'),

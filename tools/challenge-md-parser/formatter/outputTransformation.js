@@ -1,4 +1,8 @@
-const { insertSpaces, codeToBackticks } = require('./transformChallenges');
+const {
+  insertSpaces,
+  codeToBackticks,
+  prettify
+} = require('./transformChallenges');
 const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
@@ -8,6 +12,7 @@ const challengeDir = '../../../curriculum/challenges/english';
 //   if (file.stat.isFile()) {
 //     insertSpaces(file.fullPath, true)
 //       .then(codeToBackticks)
+//       .then(prettify)
 //       .then(text => fs.writeFileSync(file.fullPath, text))
 //       .catch(() => {
 //         console.log(file.path);
@@ -187,12 +192,23 @@ behave (wrt to tab opening etc) okay */
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
 
-// // not converting code to backticks
+// // // not converting code to backticks
+
+// insertSpaces(
+//   // eslint-disable-next-line
+//   './__fixtures__/link-internal.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(output => console.log(output));
+
+// not removing redundant blank lines
 
 insertSpaces(
   // eslint-disable-next-line
-  './__fixtures__/link-internal.md',
+  './__fixtures__/nest-anchor.md',
   true
 )
   .then(codeToBackticks)
+  .then(prettify)
   .then(output => console.log(output));
