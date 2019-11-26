@@ -5,12 +5,12 @@ const frontmatter = require('remark-frontmatter');
 const stringify = require('remark-stringify');
 
 const { insertSpaces } = require('./insert-spaces');
-const codeToBackticks = require('../code-to-backticks');
+const codeToBackticks = require('./code-to-backticks');
 
 const insertSpacesProcessor = unified()
   .use(markdown)
   .use(insertSpaces)
-  .use(stringify, { fences: true })
+  .use(stringify, { fences: true, emphasis: '*' })
   .use(frontmatter, ['yaml']);
 // ^ Prevents the frontmatter being modified
 
@@ -20,12 +20,12 @@ const insertSpacesProcessor = unified()
 const codeToBackticksProcessor = unified()
   .use(markdown)
   .use(codeToBackticks)
-  .use(stringify, { fences: true })
+  .use(stringify, { fences: true, emphasis: '*' })
   .use(frontmatter, ['yaml']);
 
 const prettifyProcessor = unified()
   .use(markdown)
-  .use(stringify, { fences: true })
+  .use(stringify, { fences: true, emphasis: '*' })
   .use(frontmatter, ['yaml']);
 
 exports.insertSpaces = createProcessor(insertSpacesProcessor);

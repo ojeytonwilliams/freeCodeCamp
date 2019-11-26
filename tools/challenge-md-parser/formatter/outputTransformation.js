@@ -112,6 +112,10 @@ const challengeDir = '../../../curriculum/challenges/english';
 08-coding-interview-prep/rosetta-code/heronian-triangles.english.md
 08-coding-interview-prep/rosetta-code/sort-disjoint-sublist.english.md
 08-coding-interview-prep/rosetta-code/zeckendorf-number-representation.english.md
+// The next one is fine, but has unescaped *s in the original and perhaps we
+// should use *s for italics in ours, since 1_2_3 -> 1_2_3 not 1<em>2</em>3, but
+// 1*2*3 works.
+08-coding-interview-prep/rosetta-code/24-game.english.md
 
 
 */
@@ -202,11 +206,22 @@ behave (wrt to tab opening etc) okay */
 //   .then(codeToBackticks)
 //   .then(output => console.log(output));
 
-// not removing redundant blank lines
+// // not removing redundant blank lines
+
+// insertSpaces(
+//   // eslint-disable-next-line
+//   './__fixtures__/nest-anchor.md',
+//   true
+// )
+//   .then(codeToBackticks)
+//   .then(prettify)
+//   .then(output => console.log(output));
+
+//
 
 insertSpaces(
   // eslint-disable-next-line
-  './__fixtures__/nest-anchor.md',
+  './__fixtures__/link-external.md',
   true
 )
   .then(codeToBackticks)
