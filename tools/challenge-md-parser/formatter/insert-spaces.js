@@ -8,6 +8,9 @@ const isEqual = require('lodash/isEqual');
 const dedent = require('dedent');
 const hastToMdast = require('hast-util-to-mdast');
 const remarkStringify = require('remark-stringify');
+const rehypeStringify = require('rehype-stringify');
+const remarkParse = require('remark-parse');
+const { root, inlineCode } = require('mdast-builder');
 
 const newLine = { type: 'text', value: '\n' };
 const blankLine = { type: 'text', value: '\n\n' };
@@ -44,32 +47,60 @@ no need to handle the case where the first line is not empty and markdown syntax
 will alway work.  The linter can check that the first blank line exists.
 */
 
-var compiler = unified().use(remarkStringify);
+var parser = unified().use(remarkParse);
+var mdCompiler = unified().use(remarkStringify);
+var htmlCompiler = unified().use(rehypeStringify);
 
-function stringify(mdast) {
-  return compiler.stringify(mdast);
+function stringifyMd(mdast) {
+  return mdCompiler.stringify(mdast);
 }
 
-function escapeMd(hast) {
+function stringifyHast(hast) {
+  return htmlCompiler.stringify(hast);
+}
+
+function parseMd(text) {
+  return parser.parse(text);
+}
+
+function escapeMd(hastNode) {
   // These are added by getParagraphs so must not be touched
-  if (hast.value === '\n\n') return hast;
+  if (hastNode.value === '\n\n') return hastNode;
   // A trailing space gets converted to \n, because hastToMdast will be told
   // told this is a paragraph, which it isn't
-  const trailingSpace = / /.test(hast.value[hast.value.length - 1]);
+  const trailingSpace = / /.test(hastNode.value[hastNode.value.length - 1]);
   // leading spaces also get ignored, but need to be added in, since they can
   // be following html elements.
-  const leadingSpace = / /.test(hast.value[0]);
+  const leadingSpace = / /.test(hastNode.value[0]);
   // fake a hast tree.  Is there a less hacky approach?
   const hastTree = {
     type: 'root',
-    children: [{ type: 'paragraph', children: [hast] }]
+    children: [{ type: 'paragraph', children: [hastNode] }]
   };
-  let value = stringify(hastToMdast(hastTree));
+  let value = stringifyMd(hastToMdast(hastTree));
   // Removing the last character is always necessary, since stringify appends \n
   value = value.slice(0, -1);
   if (trailingSpace) value += ' ';
   if (leadingSpace) value = ' ' + value;
   return { type: 'text', value };
+}
+
+function wrapBareUrls(hastNode) {
+  console.log('WRAPPING', hastNode);
+  // These are added by getParagraphs so must not be touched
+  if (hastNode.value === '\n\n') return hastNode;
+  const mdNode = parseMd(hastNode.value);
+  visit(mdNode, 'link', linkVisitor);
+  // we only want the parsed text, not the complete tree
+  const paragraph = mdNode.children[0];
+  // discard the wrapper and return the children, to replace the section's
+  // existing children
+  console.log('PARAGRAPH', paragraph);
+  return toHast(paragraph).children;
+}
+
+function linkVisitor(node, id, parent) {
+  parent.children[id] = inlineCode(node.url);
 }
 
 function getParagraphs(node) {
@@ -158,10 +189,18 @@ function plugin() {
         //     .filter(({ type }) => type === 'element')
         //     .map(child => child.children)
         // );
-        // console.log('after', section);
+        console.log('after', JSON.stringify(section, null, 2));
 
-        // next we escape the markdown, so that syntax like * doesn't suddenly
-        // start altering the formatting.
+        // // then wrap bare urls in code tags
+
+        section.children = section.children.reduce(
+          (acc, child) =>
+            acc.concat(child.type === 'text' ? wrapBareUrls(child) : [child]),
+          []
+        );
+
+        // next we escape the text nodes, so that syntax like * doesn't start
+        // altering the formatting when it's interpretted as markdown
 
         section.children = section.children.map(child => {
           if (child.type === 'text') {
@@ -171,7 +210,7 @@ function plugin() {
           }
         });
 
-        // console.log('escaped', section);
+        console.log('escaped', JSON.stringify(section, null, 2));
 
         // This can come from an unclosed <section>, so we have to pretend it's
         // a root element (otherwise it gets wrapped in a tag) and add the
@@ -199,3 +238,4 @@ function plugin() {
 exports.insertSpaces = plugin;
 exports.escapeMd = escapeMd;
 exports.getParagraphs = getParagraphs;
+exports.wrapBareUrls = wrapBareUrls;

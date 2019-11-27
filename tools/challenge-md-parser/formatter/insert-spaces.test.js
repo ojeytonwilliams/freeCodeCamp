@@ -1,6 +1,12 @@
 /* global expect */
 
-const { escapeMd, getParagraphs } = require('./insert-spaces');
+const h = require('hastscript');
+const u = require('unist-builder');
+const toHtml = require('hast-util-to-html');
+
+const { escapeMd, getParagraphs, wrapBareUrls } = require('./insert-spaces');
+
+const blankLine = u('text', '\n\n');
 
 describe('insert-spaces', () => {
   describe('getParagraphs', () => {
@@ -43,11 +49,40 @@ describe('insert-spaces', () => {
       const newLine = { type: 'text', value: '\n\n' };
       expect(escapeMd(newLine)).toEqual(newLine);
     });
+  });
 
-    it('should encode urls', () => {
-      const url = { type: 'text', value: 'https://example.com' };
-      const expected = { type: 'text', value: 'https&#x3A;//example.com' };
-      expect(escapeMd(url)).toEqual(expected);
+  describe('wrapBareUrls', () => {
+    it('should not modify blank line nodes', () => {
+      expect(wrapBareUrls(blankLine)).toEqual(blankLine);
+    });
+
+    it('should not modify nodes without bare urls', () => {
+      const noBareUrls = u('text', 'Just some words.');
+      expect(wrapBareUrls(noBareUrls)).toEqual(noBareUrls);
+    });
+    it('should replace bare urls with code elements', () => {
+      const urlBare = u('text', 'a https://example.com b');
+      const childrenBare = wrapBareUrls(urlBare);
+      const actualBare = h('');
+      actualBare.children = childrenBare;
+      const expectedBare = toHtml(
+        h('', ['a ', h('code', 'https://example.com'), ' b'])
+      );
+      expect(toHtml(actualBare)).toEqual(expectedBare);
+    });
+
+    it('should replace quoted bare urls with code elements', () => {
+      const urlQuoted = {
+        type: 'text',
+        value: 'a "<code>https://example.com</code>" b'
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ['a "', h('code', 'https://example.com'), '" b'])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
     });
   });
 

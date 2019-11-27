@@ -1,6 +1,10 @@
 const unified = require('unified');
+const toHast = require('mdast-util-to-hast');
 const remarkParse = require('remark-parse');
 const remarkStringify = require('remark-stringify');
+const rehypeStringify = require('rehype-stringify');
+
+const { paragraph, html, root, inlineCode, text } = require('mdast-builder');
 
 var compiler = unified()
   .use(remarkParse)
@@ -10,10 +14,23 @@ function parse(mdast) {
   return compiler.parse(mdast);
 }
 
-console.log(parse('Just some \n\n text <em> phas</em> some text'));
+var stringifier = unified().use(remarkStringify);
+var stringifierHTML = unified().use(rehypeStringify);
+function stringify(text) {
+  return stringifier.stringify(text);
+}
+function stringifyHTML(text) {
+  return stringifierHTML.stringify(text);
+}
 
 console.log();
 
+console.log(JSON.stringify(parse('a `b` c'), null, 2));
+
+console.log();
+
+console.log(toHast(paragraph([text('a'), inlineCode('b'), text('c')])));
+
 console.log(
-  parse('Just some \n\n text <em> phas</em> some text').children[1].children
+  stringifyHTML(toHast(paragraph([text('a'), inlineCode('b'), text('c')])))
 );
