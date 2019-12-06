@@ -147,6 +147,21 @@ describe('insert-spaces', () => {
     });
 
     // NOTE: this is a remark-parse bug that the formatter works around
+    it(`really should replace quoted bare urls before '>' with code elements`, () => {
+      const urlQuoted = {
+        type: 'text',
+        value: '"http://example.com">'
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ['"', h('code', 'http://example.com'), '">'])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+
+    // NOTE: this is a remark-parse bug that the formatter works around
     it(`should replace single-quoted bare urls before '>' with code elements`, () => {
       const urlQuoted = {
         type: 'text',

@@ -10,12 +10,15 @@ const hastToMdast = require('hast-util-to-mdast');
 const remarkStringify = require('remark-stringify');
 const rehypeStringify = require('rehype-stringify');
 const remarkParse = require('remark-parse');
-const { root, inlineCode } = require('mdast-builder');
+const { root, inlineCode, text } = require('mdast-builder');
 
 const newLine = { type: 'text', value: '\n' };
 const blankLine = { type: 'text', value: '\n\n' };
 
 const { inspect } = require('util');
+
+// const h = require('hastscript');
+// const u = require('unist-builder');
 
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
@@ -110,13 +113,13 @@ function linkVisitor(node, id, parent) {
     const [url, tail] = node.url.split(quote);
     parent.children[id] = inlineCode(url);
     const trailingText = parent.children[id + 1];
+    const nextTextNode = trailingText
+      ? text(quote + tail + trailingText.value)
+      : text(quote + tail);
     if (trailingText && trailingText.type === 'text') {
-      parent.children[id + 1] = {
-        ...trailingText,
-        value: quote + tail + trailingText.value
-      };
+      parent.children[id + 1] = nextTextNode;
     } else {
-      throw Error('there should always be a text node after a quoted url');
+      parent.children.splice(id + 1, 0, nextTextNode);
     }
   } else {
     parent.children[id] = inlineCode(node.url);
