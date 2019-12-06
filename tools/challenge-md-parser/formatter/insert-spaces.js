@@ -103,15 +103,20 @@ function wrapBareUrls(hastNode) {
 }
 
 function linkVisitor(node, id, parent) {
-  // Remark-parse bug: " gets absorbed into the url.
-  if (node.url.slice(-1) === '"') {
-    parent.children[id] = inlineCode(node.url.slice(0, -1));
-    const text = parent.children[id + 1];
-    // console.log('TEXT', text);
-    if (text && text.type === 'text') {
-      parent.children[id + 1] = { ...text, value: '"' + text.value };
+  // Remark-parse bug: text following (and including) a quote can get absorbed
+  // into the url.
+  if (/"|'/.test(node.url)) {
+    const quote = /"/.test(node.url) ? '"' : "'";
+    const [url, tail] = node.url.split(quote);
+    parent.children[id] = inlineCode(url);
+    const trailingText = parent.children[id + 1];
+    if (trailingText && trailingText.type === 'text') {
+      parent.children[id + 1] = {
+        ...trailingText,
+        value: quote + tail + trailingText.value
+      };
     } else {
-      throw Error('there should always be text node after a quoted url');
+      throw Error('there should always be a text node after a quoted url');
     }
   } else {
     parent.children[id] = inlineCode(node.url);

@@ -89,6 +89,20 @@ describe('insert-spaces', () => {
       expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
     });
 
+    it('should replace single quoted bare urls with code elements', () => {
+      const urlQuoted = {
+        type: 'text',
+        value: `a 'https://example.com' b`
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', [`a '`, h('code', 'https://example.com'), `' b`])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+
     // NOTE: this is a remark-parse bug that the formatter works around
     it(`should replace quoted bare urls before '.' with code elements`, () => {
       const urlQuoted = {
@@ -100,6 +114,49 @@ describe('insert-spaces', () => {
       actualQuoted.children = childrenQuoted;
       const expectedQuoted = toHtml(
         h('', ['"', h('code', 'http://example.com'), '".'])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+    // NOTE: this is a remark-parse bug that the formatter works around
+    it(`should replace single-quoted bare urls before '.' with code elements`, () => {
+      const urlQuoted = {
+        type: 'text',
+        value: "'http://example.com'."
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ["'", h('code', 'http://example.com'), "'."])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+    // NOTE: this is a remark-parse bug that the formatter works around
+    it(`should replace quoted bare urls before '>' with code elements`, () => {
+      const urlQuoted = {
+        type: 'text',
+        value: '"http://example.com">this '
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ['"', h('code', 'http://example.com'), '">this '])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+
+    // NOTE: this is a remark-parse bug that the formatter works around
+    it(`should replace single-quoted bare urls before '>' with code elements`, () => {
+      const urlQuoted = {
+        type: 'text',
+        value: `'http://example.com'>this `
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ["'", h('code', 'http://example.com'), "'>this "])
       );
       expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
     });
