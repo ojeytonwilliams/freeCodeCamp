@@ -15,6 +15,8 @@ const { root, inlineCode } = require('mdast-builder');
 const newLine = { type: 'text', value: '\n' };
 const blankLine = { type: 'text', value: '\n\n' };
 
+const { inspect } = require('util');
+
 /* Currently the challenge parser behaves differently depending on whether a
 section starts with an empty line or not.  If it does not, the parser interprets
 single new-line (\n) characters as paragraph breaks.  It also does not parse
@@ -86,21 +88,34 @@ function escapeMd(hastNode) {
 }
 
 function wrapBareUrls(hastNode) {
-  console.log('WRAPPING', hastNode);
-  // These are added by getParagraphs so must not be touched
-  if (hastNode.value === '\n\n') return hastNode;
+  // console.log('WRAPPING', hastNode);
+  // blank lines can't have urls.
+  if (/^\s*$/.test(hastNode.value)) return hastNode;
   const mdNode = parseMd(hastNode.value);
+  // console.log('PARSED MD', mdNode.children[0].children);
   visit(mdNode, 'link', linkVisitor);
   // we only want the parsed text, not the complete tree
   const paragraph = mdNode.children[0];
   // discard the wrapper and return the children, to replace the section's
   // existing children
-  console.log('PARAGRAPH', paragraph);
+  // console.log('PARAGRAPH', paragraph);
   return toHast(paragraph).children;
 }
 
 function linkVisitor(node, id, parent) {
-  parent.children[id] = inlineCode(node.url);
+  // Remark-parse bug: " gets absorbed into the url.
+  if (node.url.slice(-1) === '"') {
+    parent.children[id] = inlineCode(node.url.slice(0, -1));
+    const text = parent.children[id + 1];
+    // console.log('TEXT', text);
+    if (text && text.type === 'text') {
+      parent.children[id + 1] = { ...text, value: '"' + text.value };
+    } else {
+      throw Error('there should always be text node after a quoted url');
+    }
+  } else {
+    parent.children[id] = inlineCode(node.url);
+  }
 }
 
 function getParagraphs(node) {
@@ -189,7 +204,7 @@ function plugin() {
         //     .filter(({ type }) => type === 'element')
         //     .map(child => child.children)
         // );
-        console.log('after', JSON.stringify(section, null, 2));
+        // console.log('after', JSON.stringify(section, null, 2));
 
         // // then wrap bare urls in code tags
 
@@ -199,6 +214,7 @@ function plugin() {
           []
         );
 
+        // console.log('after WRAP', JSON.stringify(section, null, 2));
         // next we escape the text nodes, so that syntax like * doesn't start
         // altering the formatting when it's interpretted as markdown
 
@@ -210,7 +226,7 @@ function plugin() {
           }
         });
 
-        console.log('escaped', JSON.stringify(section, null, 2));
+        // console.log('escaped', JSON.stringify(section, null, 2));
 
         // This can come from an unclosed <section>, so we have to pretend it's
         // a root element (otherwise it gets wrapped in a tag) and add the

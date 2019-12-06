@@ -58,20 +58,53 @@ describe('insert-spaces', () => {
 
     it('should not modify nodes without bare urls', () => {
       const noBareUrls = u('text', 'Just some words.');
-      expect(wrapBareUrls(noBareUrls)).toEqual(noBareUrls);
+      const childrenNoBare = wrapBareUrls(noBareUrls);
+      const actualHast = h('');
+      actualHast.children = childrenNoBare;
+      const expected = toHtml(h('', 'Just some words.'));
+      expect(toHtml(actualHast)).toEqual(expected);
     });
     it('should replace bare urls with code elements', () => {
       const urlBare = u('text', 'a https://example.com b');
       const childrenBare = wrapBareUrls(urlBare);
-      const actualBare = h('');
-      actualBare.children = childrenBare;
-      const expectedBare = toHtml(
+      const actualHast = h('');
+      actualHast.children = childrenBare;
+      const expected = toHtml(
         h('', ['a ', h('code', 'https://example.com'), ' b'])
       );
-      expect(toHtml(actualBare)).toEqual(expectedBare);
+      expect(toHtml(actualHast)).toEqual(expected);
     });
 
     it('should replace quoted bare urls with code elements', () => {
+      const urlQuoted = {
+        type: 'text',
+        value: 'a "https://example.com" b'
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ['a "', h('code', 'https://example.com'), '" b'])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+
+    // NOTE: this is a remark-parse bug that the formatter works around
+    it(`should replace quoted bare urls before '.' with code elements`, () => {
+      const urlQuoted = {
+        type: 'text',
+        value: '"http://example.com".'
+      };
+      const childrenQuoted = wrapBareUrls(urlQuoted);
+      const actualQuoted = h('');
+      actualQuoted.children = childrenQuoted;
+      const expectedQuoted = toHtml(
+        h('', ['"', h('code', 'http://example.com'), '".'])
+      );
+      expect(toHtml(actualQuoted)).toEqual(expectedQuoted);
+    });
+
+    it('should replace nested quoted bare urls with code elements', () => {
       const urlQuoted = {
         type: 'text',
         value: 'a "<code>https://example.com</code>" b'

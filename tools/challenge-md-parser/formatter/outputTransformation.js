@@ -7,18 +7,18 @@ const readDirP = require('readdirp-walk');
 const fs = require('fs');
 
 const challengeDir = '../../../curriculum/challenges/english';
-// // TODO: bare urls should not be parsed (probably)
-// readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
-//   if (file.stat.isFile()) {
-//     insertSpaces(file.fullPath, true)
-//       .then(codeToBackticks)
-//       .then(prettify)
-//       .then(text => fs.writeFileSync(file.fullPath, text))
-//       .catch(() => {
-//         console.log(file.path);
-//       });
-//   }
-// });
+
+readDirP({ root: challengeDir, fileFilter: ['*.md'] }).on('data', file => {
+  if (file.stat.isFile()) {
+    insertSpaces(file.fullPath, true)
+      .then(codeToBackticks)
+      .then(prettify)
+      .then(text => fs.writeFileSync(file.fullPath, text))
+      .catch(() => {
+        console.log(file.path);
+      });
+  }
+});
 
 // insertSpaces(
 //   // eslint-disable-next-line
@@ -219,11 +219,11 @@ behave (wrt to tab opening etc) okay */
 
 //
 
-insertSpaces(
-  // eslint-disable-next-line
-  './__fixtures__/dead-links.md',
-  true
-)
-  // .then(codeToBackticks)
-  .then(prettify)
-  .then(output => console.log(output));
+// insertSpaces(
+//   // eslint-disable-next-line
+//   './__fixtures__/dead-links.md',
+//   true
+// )
+//   // .then(codeToBackticks)
+//   // .then(prettify)
+//   .then(output => console.log(output));

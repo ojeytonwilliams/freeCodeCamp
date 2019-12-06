@@ -25,7 +25,7 @@ function stringifyHTML(text) {
 
 console.log();
 
-console.log(JSON.stringify(parse('a `b` c'), null, 2));
+console.log(JSON.stringify(parse('a www.example.com  "https://www.example.com". c'), null, 2));
 
 console.log();
 
