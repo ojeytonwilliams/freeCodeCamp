@@ -9,7 +9,7 @@ forumTopicId: 16627
 ## Description
 <section id='description'>
 Let's add a <code>submit</code> button to your form. Clicking this button will send the data from your form to the URL you specified with your form's <code>action</code> attribute.
-Here's an example submit button:
+Here's an example submit changed text.
 <code>&#60;button type="submit"&#62;this button submits the form&#60;/button&#62;</code>
 </section>
 
