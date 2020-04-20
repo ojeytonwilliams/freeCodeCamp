@@ -22,7 +22,7 @@ describe('Learn Landing page', function() {
   it('renders', () => {
     cy.visit(locations.index);
 
-    cy.title().should('eq', 'Learn | freeCodeCamp.org');
+    cy.title().should('eq', 'Learn to code at home | freeCodeCamp.org');
   });
 
   it('Has the correct heading for an unauthenticated User', () => {
