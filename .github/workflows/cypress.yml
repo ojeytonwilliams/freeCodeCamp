@@ -8,6 +8,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Set up environment
+        run: cp sample.env .env
+
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
