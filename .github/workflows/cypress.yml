@@ -20,8 +20,11 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          start: npm run develop
-          wait-on: http://localhost:8000
+          build: npm run build
+# this should mirror the production build, but for now we're just using the dev
+# server and gatsby serve instead (the npm script serve:client needs updating!)
+          start: npm run develop:server && npm run serve:client
+          wait-on: http://localhost:9000
 # a timeout has to be specified, but 10 minutes should be more than enough
           wait-on-timeout: 600
-          config: baseUrl=http://localhost:8000
+          config: baseUrl=http://localhost:9000
