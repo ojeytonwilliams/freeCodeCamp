@@ -24,7 +24,7 @@ jobs:
 # this should mirror the production build, but for now we're just using the dev
 # server and gatsby serve instead (the npm script serve:client needs updating!)
           start: npm run develop:server && npm run serve:client
-          wait-on: http://localhost:9000
+          wait-on: http://localhost:8000
 # a timeout has to be specified, but 10 minutes should be more than enough
           wait-on-timeout: 600
-          config: baseUrl=http://localhost:9000
+          config: baseUrl=http://localhost:8000
