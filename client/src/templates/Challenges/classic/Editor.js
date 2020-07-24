@@ -319,8 +319,6 @@ class Editor extends Component {
     ];
 
     if (editableBoundaries.length === 2) {
-      this.showEditableRegion(editableBoundaries);
-
       // TODO: is there a nicer approach/way of organising everything that
       // avoids the binds? babel-plugin-transform-class-properties ?
       const getViewZoneTop = this.getViewZoneTop.bind(this);
@@ -377,6 +375,7 @@ class Editor extends Component {
         editor.layoutOverlayWidget(this._overlayWidget);
         editor.layoutOverlayWidget(this._outputWidget);
       });
+      this.showEditableRegion(editableBoundaries);
     }
   };
 
@@ -563,7 +562,7 @@ class Editor extends Component {
         lineNumber: editableBoundaries[0] + 1,
         column: 1
       });
-      this._editor.revealLines(...editableBoundaries);
+      this._editor.revealLinesInCenter(...editableBoundaries);
     }
   }
 
