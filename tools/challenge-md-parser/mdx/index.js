@@ -16,6 +16,9 @@ const jsxToHtml = require('./plugins/replace-jsx-with-html');
 // pipeline?  Seems not.  It seems to be applied retroactively, my guess is
 // that it replaces the parser, so it's irrelevant where it's placed.
 
+// TODO: clean up the repositories (I just grabbed all challenge-md-parser's
+// packages, so there are likely to be unused ones)
+
 const processor = remark()
   // TODO: consider checking for syntax errors and providing a message that
   // explains how to work around them. i.e. import -> <p>import</p>
