@@ -1,7 +1,15 @@
 const path = require('path');
-const { findIndex, reduce, toString } = require('lodash');
+const {
+  findIndex,
+  reduce,
+  toString,
+  forIn,
+  isEmpty,
+  isEqual
+} = require('lodash');
 const readDirP = require('readdirp-walk');
 const { parseMarkdown } = require('../tools/challenge-md-parser');
+const { parseMDX } = require('../tools/challenge-md-parser/mdx');
 const fs = require('fs');
 const util = require('util');
 /* eslint-disable max-len */
@@ -16,6 +24,7 @@ const { dasherize, nameify } = require('../utils/slugs');
 const { createPoly } = require('../utils/polyvinyl');
 const { blockNameify } = require('../utils/block-nameify');
 const { supportedLangs } = require('./utils');
+const diff = require('diff');
 
 const access = util.promisify(fs.access);
 
@@ -192,9 +201,21 @@ async function buildCurriculum(file, curriculum, lang) {
   }
   const { meta } = challengeBlock;
 
-  const challenge = await createChallenge(filePath, meta);
+  // TODO: once all the challenges are mdx, these conditionals can go.
+  const isMDX = filePath.slice(-1) === 'x';
+  const isCert = superBlock === 'certificates';
 
-  challengeBlock.challenges = [...challengeBlock.challenges, challenge];
+  if (isMDX && !isCert) {
+    const challenge = await createChallenge(filePath, meta);
+
+    challengeBlock.challenges = [...challengeBlock.challenges, challenge];
+  }
+
+  if (!isMDX && isCert) {
+    const challenge = await createChallenge(filePath, meta);
+
+    challengeBlock.challenges = [...challengeBlock.challenges, challenge];
+  }
 }
 
 async function parseTranslation(engPath, transPath, dict, lang) {
@@ -213,8 +234,8 @@ async function parseTranslation(engPath, transPath, dict, lang) {
 function createChallengeCreator(basePath, lang) {
   const hasEnglishSource = hasEnglishSourceCreator(basePath);
   return async function createChallenge(filePath, maybeMeta) {
-    function getFullPath(pathLang) {
-      return path.resolve(__dirname, basePath, pathLang, filePath);
+    function getFullPath(pathLang, relativePath = filePath) {
+      return path.resolve(__dirname, basePath, pathLang, relativePath);
     }
     let meta;
     if (maybeMeta) {
@@ -240,14 +261,175 @@ ${getFullPath('english')}
     // while the auditing is ongoing, we default to English for un-audited certs
     // once that's complete, we can revert to using isEnglishChallenge(fullPath)
     const useEnglish = lang === 'english' || !isAuditedCert(lang, superBlock);
-    const challenge = await (useEnglish
-      ? parseMarkdown(getFullPath('english'))
-      : parseTranslation(
-          getFullPath('english'),
-          getFullPath(lang),
-          COMMENT_TRANSLATIONS,
-          lang
-        ));
+    const isMdx = getFullPath('english').slice(-1) === 'x';
+    let challenge;
+
+    if (isMdx) {
+      challenge = await parseMDX(getFullPath('english'));
+      const challengeMD = await (useEnglish
+        ? parseMarkdown(getFullPath('english', filePath.slice(0, -1)))
+        : parseTranslation(
+            getFullPath('english', filePath.slice(0, -1)),
+            getFullPath(lang),
+            COMMENT_TRANSLATIONS,
+            lang
+          ));
+      let match = true;
+      forIn(challenge, (value, key) => {
+        let mdValue = challengeMD[key];
+        // Simplify to return the final comparison.
+        if (isEmpty(value)) {
+          match = isEmpty(mdValue) ? match : false;
+          if (!match) {
+            console.log('TITLE', challenge.title);
+            console.log('failed with', key);
+          }
+          return isEmpty(mdValue);
+        }
+        if (key === 'solutions' && isEqual(value, [{}])) {
+          match = isEmpty(mdValue) ? match : false;
+          if (!match) {
+            console.log('TITLE', challenge.title);
+            console.log('failed with', key);
+          }
+          return isEmpty(mdValue);
+        }
+        if (key === 'solutions') {
+          value.forEach((solution, idx) => {
+            match = compareFiles(mdValue[idx], solution) ? match : false;
+          });
+          if (!match) {
+            console.log('TITLE', challenge.title);
+            console.log('failed with', key);
+          }
+          return isEmpty(mdValue);
+        }
+
+        if (key === 'files') {
+          match = compareFiles(mdValue, value) ? match : false;
+          if (!match) {
+            console.log('TITLE', challenge.title);
+            console.log('failed with', key);
+          }
+          return isEmpty(mdValue);
+        }
+
+        // TODO: remove wbrs
+
+        // TODO: final checks, ignoring the descriptions which we know can
+        // differ in trivial ways
+
+        if (key === 'tests') {
+          value.forEach(({ text, testString }, idx) => {
+            match =
+              mdValue[idx].text.trim() === text.trim() &&
+              mdValue[idx].testString.trim() === testString.trim()
+                ? match
+                : false;
+            if (!match) {
+              console.log('TITLE', challenge.title);
+              console.log('failed with', key);
+              // console.log('MD');
+              // console.log(mdValue[idx].text);
+              // console.log(mdValue[idx].testString);
+              // console.log('MDX');
+              // console.log(value[idx].text);
+              // console.log(value[idx].testString);
+              match = true;
+            }
+          });
+
+          return isEmpty(mdValue);
+        }
+        if (key === 'description' || key === 'instructions') {
+          if (isEqual(value, mdValue)) {
+            return true;
+          } else {
+            // check that the only difference is that md has <p><tag> and mdx
+            // just has <tag> or that it's <pre>\n vs <pre>. For simplicity I'm
+            // ignoring the attributes, because they're quoted differently by
+            // the two parsers, "" in md '' in mdx.
+
+            value = value
+              .replace(/<pre>\n/g, '<pre>')
+              .replace(/<table([^>]*)>/g, '<table>')
+              .replace(/<img([^>]*)>/g, '<img>')
+              .replace(/<div([^>]*)>/g, '<div>');
+
+            mdValue = mdValue
+              .replace(/<p><pre>/g, '<pre>')
+              .replace(/<\/pre><\/p>/g, '</pre>')
+              .replace(/<p><h4>/g, '<h4>')
+              .replace(/<\/h4><\/p>/g, '</h4>')
+              .replace(/<p><table([^>]*)>/g, '<table>')
+              .replace(/<\/table><\/p>/g, '</table>')
+              .replace(/<p><img([^>]*)>/g, '<img>')
+              .replace(/<img([^>]*)><\/p>/g, '<img>')
+              .replace(/<\/img><\/p>/g, '</img>')
+              .replace(/<p><div([^>]*)>/g, '<div>')
+              .replace(/<\/div><\/p>/g, '</div>')
+              .replace(/<p><ul>/g, '<ul>')
+              .replace(/<\/ul><\/p>/g, '</ul>')
+              .replace(/<p><li>/g, '<li>')
+              .replace(/<\/li><\/p>/g, '</li>')
+              .replace(/<p><ol>/g, '<ol>')
+              .replace(/<\/ol><\/p>/g, '</ol>')
+              .replace(/<p><blockquote>/g, '<blockquote>')
+              .replace(/<\/blockquote><\/p>/g, '</blockquote>')
+              .replace(/<p><!--/g, '<!--')
+              .replace(/--><\/p>/g, '-->');
+            // match = isEqual(value, mdValue);
+            const changes = diff.diffLines(mdValue, value);
+            changes.forEach(({ added, removed, value }) => {
+              if (added || removed) {
+                if (value !== '"' && value !== "'" && value.trim() !== '') {
+                  console.log('Diff!');
+                  console.log(added ? 'added  ' : 'removed', value);
+                  match = false;
+                }
+              }
+            });
+
+            if (!match) {
+              console.log('TITLE', challenge.title);
+              console.log('failed with desc/inst: ', key);
+              console.log('MD');
+              console.log(mdValue);
+              console.log('MDX');
+              console.log(value);
+              // process.exit()
+            }
+            return false;
+          }
+        }
+
+        if (isEqual(value, mdValue)) {
+          return true;
+        } else {
+          console.log('TITLE', challenge.title);
+          console.log('failed with', key);
+          console.log('MD');
+          console.log(mdValue);
+          console.log('MDX');
+          console.log(value);
+        }
+      });
+
+      // if (!match) {
+      //   console.dir(challenge, { depth: null });
+      //   console.dir(challengeMD, { depth: null });
+      //   process.exit(-1);
+      // }
+    } else {
+      challenge = await (useEnglish
+        ? parseMarkdown(getFullPath('english'))
+        : parseTranslation(
+            getFullPath('english'),
+            getFullPath(lang),
+            COMMENT_TRANSLATIONS,
+            lang
+          ));
+    }
     const challengeOrder = findIndex(
       meta.challengeOrder,
       ([id]) => id === challenge.id
@@ -278,6 +460,28 @@ ${getFullPath('english')}
 
     return prepareChallenge(challenge);
   };
+}
+
+// Yes, this is horrid.  It's just a hack because the mdx parser trims the trailing
+// /n, but the md parser does not (and we don't care)
+function compareFiles(fileFromMarkdown, fileFromMdx) {
+  let match = true;
+  Object.entries(fileFromMarkdown).forEach(([fileindex, mdSoln]) => {
+    Object.entries(mdSoln).forEach(([prop, value]) => {
+      if (['contents', 'head', 'tail'].includes(prop)) {
+        if (value.slice(0, -1) !== fileFromMdx[fileindex][prop]) {
+          console.log(`${prop} mismatch`);
+          match = false;
+        }
+      } else if (prop === 'id') {
+        // ignore it, because ids are new
+      } else if (!isEqual(fileFromMdx[fileindex][prop], value)) {
+        console.log('failing because of ' + prop);
+        match = false;
+      }
+    });
+  });
+  return match;
 }
 
 // TODO: tests and more descriptive name.
