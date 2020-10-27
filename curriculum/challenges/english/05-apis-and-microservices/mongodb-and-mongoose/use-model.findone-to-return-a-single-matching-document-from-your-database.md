@@ -6,16 +6,23 @@ forumTopicId: 301545
 ---
 
 ## Description
+
 <section id='description'>
-<code>Model.findOne()</code> behaves like <code>.find()</code>, but it returns only one document (not an array), even if there are multiple items. It is especially useful when searching by properties that you have declared as unique. 
+
+`Model.findOne()` behaves like `.find()`, but it returns only one document (not an array), even if there are multiple items. It is especially useful when searching by properties that you have declared as unique.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Find just one person which has a certain food in the person&apos;s favorites, using <code>Model.findOne() -> Person</code>. Use the function argument food as search key.
+
+Find just one person which has a certain food in the person's favorites, using `Model.findOne() -> Person`. Use the function argument food as search key.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -28,11 +35,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

@@ -6,20 +6,27 @@ forumTopicId: 301598
 ---
 
 ## Description
-<section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
 
-<code>.approximately(actual, expected, delta, [message])</code>
-Asserts that the actual is equal <code>expected</code>, to within a +/- <code>delta</code> range.
+<section id='description'>
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
+`.approximately(actual, expected, delta, [message])` Asserts that the actual is equal `expected`, to within a +/- `delta` range.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Use <code>assert.approximately()</code> to make the tests pass.
+
+Use `assert.approximately()` to make the tests pass.
+
 Choose the minimum range (3rd parameter) to make the test always pass. It should be less than 1.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -36,11 +43,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

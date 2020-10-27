@@ -6,18 +6,25 @@ forumTopicId: 301581
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-infosec">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-infosec/'>GitHub</a>.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-infosec), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-infosec/).
+
 Helmet helps you secure your Express apps by setting various HTTP headers.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
 Install Helmet version `3.21.3`, then require it.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -30,11 +37,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

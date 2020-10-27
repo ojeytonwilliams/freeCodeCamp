@@ -6,17 +6,25 @@ forumTopicId: 301542
 ---
 
 ## Description
+
 <section id='description'>
-Recent versions of mongoose have methods to simplify documents updating. Some more advanced features (i.e. pre/post hooks, validation) behave differently with this approach, so the Classic method is still useful in many situations. <code>findByIdAndUpdate()</code> can be used when searching by Id.
+
+Recent versions of mongoose have methods to simplify documents updating. Some more advanced features (i.e. pre/post hooks, validation) behave differently with this approach, so the Classic method is still useful in many situations. `findByIdAndUpdate()` can be used when searching by Id.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Find a person by <code>Name</code> and set the person&apos;s age to 20. Use the function parameter <code>personName</code> as search key.
-<strong>Note:</strong> You should return the updated document. To do that you need to pass the options document <code>{ new: true }</code> as the 3rd argument to <code>findOneAndUpdate()</code>. By default these methods return the unmodified object.
+
+Find a person by `Name` and set the person's age to 20. Use the function parameter `personName` as search key.
+
+**Note:** You should return the updated document. To do that you need to pass the options document `{ new: true }` as the 3rd argument to `findOneAndUpdate()`. By default these methods return the unmodified object.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -29,11 +37,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

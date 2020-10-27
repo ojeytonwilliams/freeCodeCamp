@@ -6,21 +6,25 @@ forumTopicId: 301607
 ---
 
 ## Description
+
 <section id='description'>
 
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
 
-<code>isOk()</code> will test for a truthy value and <code>isNotOk()</code> will test for a falsy value.
-To learn more about truthy and falsy values, try our <a href="https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/basic-algorithm-scripting/falsy-bouncer" target="_blank">Falsy Bouncer</a> challenge.
+`isOk()` will test for a truthy value and `isNotOk()` will test for a falsy value. To learn more about truthy and falsy values, try our [Falsy Bouncer](https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/basic-algorithm-scripting/falsy-bouncer) challenge.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
-Use <code>assert.isOk()</code> or <code>assert.isNotOk()</code> to make the tests pass.
+Use `assert.isOk()` or `assert.isNotOk()` to make the tests pass.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -39,11 +43,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

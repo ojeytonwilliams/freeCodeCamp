@@ -6,18 +6,25 @@ forumTopicId: 301568
 ---
 
 ## Description
+
 <section id='description'>
-Build a full stack JavaScript app that is functionally similar to this: <a href="https://anonymous-message-board.freecodecamp.rocks/" target="_blank">https://anonymous-message-board.freecodecamp.rocks/</a>.
+
+Build a full stack JavaScript app that is functionally similar to this: <https://anonymous-message-board.freecodecamp.rocks/>.
+
 Working on this project will involve you writing your code on Repl.it on our starter project. After completing this project you can copy your public Repl.it URL (to the homepage of your app) into this screen to test it! Optionally you may choose to write your project on another platform but it must be publicly visible for our testing.
-Start this project on Repl.it using <a href="https://repl.it/github/freeCodeCamp/boilerplate-project-messageboard">this link</a> or clone <a href='https://github.com/freeCodeCamp/boilerplate-project-messageboard/'>this repository</a> on GitHub! If you use Repl.it, remember to save the link to your project somewhere safe!
+
+Start this project on Repl.it using [this link](https://repl.it/github/freeCodeCamp/boilerplate-project-messageboard) or clone [this repository](https://github.com/freeCodeCamp/boilerplate-project-messageboard/) on GitHub! If you use Repl.it, remember to save the link to your project somewhere safe!
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -57,11 +64,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

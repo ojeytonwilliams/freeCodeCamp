@@ -6,18 +6,25 @@ forumTopicId: 301593
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
 
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Replace <code>assert.fail()</code>. Test the status and the <code>text.response</code>. Make the test pass.
-Don't send a name in the query; the endpoint responds with <code>hello Guest</code>.
+
+Replace `assert.fail()`. Test the status and the `text.response`. Make the test pass.
+
+Don't send a name in the query; the endpoint responds with `hello Guest`.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -34,11 +41,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

@@ -6,17 +6,25 @@ forumTopicId: 301599
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
-<code>isString</code> or <code>isNotString</code> asserts that the actual value is a string.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
+`isString` or `isNotString` asserts that the actual value is a string.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Use <code>assert.isString()</code> or <code>assert.isNotString()</code> to make the tests pass. 
+
+Use `assert.isString()` or `assert.isNotString()` to make the tests pass.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -35,11 +43,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

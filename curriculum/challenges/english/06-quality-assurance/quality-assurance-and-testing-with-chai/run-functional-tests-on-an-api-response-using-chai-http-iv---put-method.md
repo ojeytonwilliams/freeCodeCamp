@@ -6,15 +6,20 @@ forumTopicId: 301591
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
 This exercise is similar to the preceding one. Look at it for the details.
 
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Send 
+
+Send
 
 ```json
 {
@@ -22,12 +27,12 @@ Send
 }
 ```
 
-Replace <code>assert.fail()</code> and make the test pass.
-Check for 1) <code>status</code>, 2) <code>type</code>, 3) <code>body.name</code>, 4) <code>body.surname</code>.
-Follow the assertion order above: we rely on it.
+Replace `assert.fail()` and make the test pass. Check for 1) `status`, 2) `type`, 3) `body.name`, 4) `body.surname`. Follow the assertion order above: we rely on it.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -48,11 +53,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

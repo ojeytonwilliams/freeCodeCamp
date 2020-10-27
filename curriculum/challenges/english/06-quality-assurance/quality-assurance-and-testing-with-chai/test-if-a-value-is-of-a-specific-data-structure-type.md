@@ -6,18 +6,25 @@ forumTopicId: 301601
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
-<code>#typeOf</code> asserts that value’s type is the given string, as determined by <code>Object.prototype.toString</code>.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
+`#typeOf` asserts that value’s type is the given string, as determined by `Object.prototype.toString`.
 
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Use <code>assert.typeOf()</code> or <code>assert.notTypeOf()</code> to make the tests pass.
+
+Use `assert.typeOf()` or `assert.notTypeOf()` to make the tests pass.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -40,11 +47,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

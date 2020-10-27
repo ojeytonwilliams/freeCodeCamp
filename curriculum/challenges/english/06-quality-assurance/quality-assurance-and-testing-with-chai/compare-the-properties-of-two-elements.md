@@ -6,17 +6,23 @@ forumTopicId: 301588
 ---
 
 ## Description
+
 <section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
-Use <code>assert.isAbove()</code>(i.e. greater) or <code>assert.isAtMost()</code> (i.e. less than or equal) to make the tests pass.
+Use `assert.isAbove()`(i.e. greater) or `assert.isAtMost()` (i.e. less than or equal) to make the tests pass.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -37,11 +43,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

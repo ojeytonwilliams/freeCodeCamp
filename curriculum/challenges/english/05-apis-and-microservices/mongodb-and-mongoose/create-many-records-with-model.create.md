@@ -6,17 +6,25 @@ forumTopicId: 301537
 ---
 
 ## Description
+
 <section id='description'>
-Sometimes you need to create many instances of your models, e.g. when seeding a database with initial data. <code>Model.create()</code> takes an array of objects like <code>[{name: 'John', ...}, {...}, ...]</code> as the first argument, and saves them all in the db.
+
+Sometimes you need to create many instances of your models, e.g. when seeding a database with initial data. `Model.create()` takes an array of objects like `[{name: 'John', ...}, {...}, ...]` as the first argument, and saves them all in the db.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Modify the <code>createManyPeople</code> function to create many people using <code>Model.create()</code> with the argument <code>arrayOfPeople</code>.
-<strong>Note: </strong> You can reuse the model you instantiated in the previous exercise.
+
+Modify the `createManyPeople` function to create many people using `Model.create()` with the argument `arrayOfPeople`.
+
+**Note:** You can reuse the model you instantiated in the previous exercise.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -29,11 +37,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

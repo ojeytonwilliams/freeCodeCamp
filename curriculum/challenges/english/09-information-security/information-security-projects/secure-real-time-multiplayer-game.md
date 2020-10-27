@@ -5,20 +5,25 @@ challengeType: 4
 ---
 
 ## Description
+
 <section id='description'>
-Develop a 2D real time multiplayer game using the HTML Canvas API and <a href='https://socket.io/' target='_blank'>Socket.io</a> that is functionally similar to this: <a href="https://secure-real-time-multiplayer-game.freecodecamp.rocks/" target="_blank">https://secure-real-time-multiplayer-game.freecodecamp.rocks/</a>.
+
+Develop a 2D real time multiplayer game using the HTML Canvas API and [Socket.io](https://socket.io/) that is functionally similar to this: <https://secure-real-time-multiplayer-game.freecodecamp.rocks/>.
 
 Working on this project will involve you writing your code on Repl.it on our starter project. After completing this project you can copy your public Repl.it URL (to the homepage of your app) into this screen to test it! Optionally you may choose to write your project on another platform but it must be publicly visible for our testing.
 
-Start this project on Repl.it using <a href="https://repl.it/github/freeCodeCamp/boilerplate-project-secure-real-time-multiplayer-game">this link</a> or clone <a href='https://github.com/freeCodeCamp/boilerplate-project-secure-real-time-multiplayer-game'>this repository</a> on GitHub! If you use Repl.it, remember to save the link to your project somewhere safe!
+Start this project on Repl.it using [this link](https://repl.it/github/freeCodeCamp/boilerplate-project-secure-real-time-multiplayer-game) or clone [this repository](https://github.com/freeCodeCamp/boilerplate-project-secure-real-time-multiplayer-game) on GitHub! If you use Repl.it, remember to save the link to your project somewhere safe!
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -72,11 +77,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

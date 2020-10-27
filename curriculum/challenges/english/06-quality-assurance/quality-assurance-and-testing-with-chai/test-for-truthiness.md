@@ -6,10 +6,12 @@ forumTopicId: 301596
 ---
 
 ## Description
-<section id='description'>
-As a reminder, this project is being built upon the following starter project on <a href="https://repl.it/github/freeCodeCamp/boilerplate-mochachai">Repl.it</a>, or cloned from <a href='https://github.com/freeCodeCamp/boilerplate-mochachai/'>GitHub</a>.
 
-<code>isTrue()</code> will test for the boolean value <code>true</code> and <code>isNotTrue()</code> will pass when given anything but the boolean value of <code>true</code>.
+<section id='description'>
+
+As a reminder, this project is being built upon the following starter project on [Repl.it](https://repl.it/github/freeCodeCamp/boilerplate-mochachai), or cloned from [GitHub](https://github.com/freeCodeCamp/boilerplate-mochachai/).
+
+`isTrue()` will test for the boolean value `true` and `isNotTrue()` will pass when given anything but the boolean value of `true`.
 
 ```js
 assert.isTrue(true, 'this will pass with the boolean value true');
@@ -17,16 +19,20 @@ assert.isTrue('true', 'this will NOT pass with the string value 'true');
 assert.isTrue(1, 'this will NOT pass with the number value 1');
 ```
 
+`isFalse()` and `isNotFalse()` also exist and behave similarly to their true counterparts except they look for the boolean value of `false`.
 
-<code>isFalse()</code> and <code>isNotFalse()</code> also exist and behave similarly to their true counterparts except they look for the boolean value of <code>false</code>. 
 </section>
 
 ## Instructions
+
 <section id='instructions'>
-Use <code>assert.isTrue()</code> or <code>assert.isNotTrue()</code> to make the tests pass.
+
+Use `assert.isTrue()` or `assert.isNotTrue()` to make the tests pass.
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -45,11 +51,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

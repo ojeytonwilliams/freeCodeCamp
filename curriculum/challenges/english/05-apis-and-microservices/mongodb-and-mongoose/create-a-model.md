@@ -6,15 +6,14 @@ forumTopicId: 301535
 ---
 
 ## Description
+
 <section id='description'>
-<b>C</b>RUD Part I - CREATE
 
-First of all we need a Schema. Each schema maps to a MongoDB collection. It defines the shape of the documents within that collection.
-Schemas are building block for Models. They can be nested to create complex models, but in this case we’ll keep things simple.
-A model allows you to create instances of your objects, called documents.
+**C**RUD Part I - CREATE
 
-Repl.it is a real server, and in real servers the interactions with the db happen in handler functions. These function are executed when some event happens (e.g. someone hits an endpoint on your API). We’ll follow the same approach in these exercises. The <code>done()</code> function is a callback that tells us that we can proceed after completing an asynchronous operation such as inserting, searching, updating or deleting. It’s following the Node convention and should be called as <code>done(null, data)</code> on success, or <code>done(err)</code> on error.
-Warning - When interacting with remote services, errors may occur!
+First of all we need a Schema. Each schema maps to a MongoDB collection. It defines the shape of the documents within that collection. Schemas are building block for Models. They can be nested to create complex models, but in this case we’ll keep things simple. A model allows you to create instances of your objects, called documents.
+
+Repl.it is a real server, and in real servers the interactions with the db happen in handler functions. These function are executed when some event happens (e.g. someone hits an endpoint on your API). We’ll follow the same approach in these exercises. The `done()` function is a callback that tells us that we can proceed after completing an asynchronous operation such as inserting, searching, updating or deleting. It’s following the Node convention and should be called as `done(null, data)` on success, or `done(err)` on error. Warning - When interacting with remote services, errors may occur!
 
 ```js
 /* Example */
@@ -29,8 +28,11 @@ var someFunc = function(done) {
 </section>
 
 ## Instructions
+
 <section id='instructions'>
+
 Create a person having this prototype :
+
 <blockquote>
 - Person Prototype -<br>
 --------------------<br>
@@ -39,12 +41,12 @@ age :  number<br>
 favoriteFoods : array of strings (*)
 </blockquote>
 
-Use the mongoose basic schema types. If you want you can also add
-more fields, use simple validators like required or unique,
-and set default values. See the <a href='http://mongoosejs.com/docs/guide.html'>mongoose docs</a>.
+Use the mongoose basic schema types. If you want you can also add more fields, use simple validators like required or unique, and set default values. See the [mongoose docs](http://mongoosejs.com/docs/guide.html).
+
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -57,11 +59,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js

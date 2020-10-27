@@ -6,16 +6,21 @@ forumTopicId: 301539
 ---
 
 ## Description
+
 <section id='description'>
-Delete one person by the person's <code>_id</code>. You should use one of the methods <code>findByIdAndRemove()</code> or <code>findOneAndRemove()</code>. They are like the previous update methods. They pass the removed document to the db. As usual, use the function argument <code>personId</code> as the search key.
+
+Delete one person by the person's `_id`. You should use one of the methods `findByIdAndRemove()` or `findOneAndRemove()`. They are like the previous update methods. They pass the removed document to the db. As usual, use the function argument `personId` as the search key.
+
 </section>
 
 ## Instructions
+
 <section id='instructions'>
 
 </section>
 
 ## Tests
+
 <section id='tests'>
 
 ```yml
@@ -28,11 +33,13 @@ tests:
 </section>
 
 ## Challenge Seed
+
 <section id='challengeSeed'>
 
 </section>
 
 ## Solution
+
 <section id='solution'>
 
 ```js
