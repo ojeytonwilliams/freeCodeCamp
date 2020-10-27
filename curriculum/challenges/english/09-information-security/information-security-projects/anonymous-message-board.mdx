@@ -1,0 +1,108 @@
+---
+id: 587d824a367417b2b2512c45
+title: Anonymous Message Board
+challengeType: 4
+forumTopicId: 301568
+---
+
+# --description--
+
+Build a full stack JavaScript app that is functionally similar to this: <https://anonymous-message-board.freecodecamp.rocks/>.
+
+Working on this project will involve you writing your code on Repl.it on our starter project. After completing this project you can copy your public Repl.it URL (to the homepage of your app) into this screen to test it! Optionally you may choose to write your project on another platform but it must be publicly visible for our testing.
+
+Start this project on Repl.it using [this link](https://repl.it/github/freeCodeCamp/boilerplate-project-messageboard) or clone [this repository](https://github.com/freeCodeCamp/boilerplate-project-messageboard/) on GitHub! If you use Repl.it, remember to save the link to your project somewhere safe!
+
+# --hints--
+
+I can provide my own project, not the example URL.
+
+```js
+getUserInput => {
+  assert(!/.*\/anonymous-message-board\.freecodecamp\.rocks/.test(getUserInput('url')));
+}
+```
+
+Only allow your site to be loading in an iFrame on your own pages.
+
+```js
+
+```
+
+Do not allow DNS prefetching.
+
+```js
+
+```
+
+Only allow your site to send the referrer for your own pages.
+
+```js
+
+```
+
+I can POST a thread to a specific message board by passing form data text and deletepassword\_ to /api/threads/{board}.(Recommend res.redirect to board page /b/{board}) Saved will be at least \_id, text, createdon\_(date&time), bumpedon\_(date&time, starts same as created_on), reported(boolean), deletepassword\_, & replies(array).
+
+```js
+
+```
+
+I can POST a reply to a thread on a specific board by passing form data text, deletepassword\_, & threadid\_ to /api/replies/{board} and it will also update the bumped_on date to the comments date.(Recommend res.redirect to thread page /b/{board}/{thread_id}) In the thread's replies array will be saved \_id, text, createdon\_, deletepassword\_, & reported.
+
+```js
+
+```
+
+I can GET an array of the most recent 10 bumped threads on the board with only the most recent 3 replies each from /api/threads/{board}. The reported and deletepasswords\_ fields will not be sent to the client.
+
+```js
+
+```
+
+I can GET an entire thread with all its replies from /api/replies/{board}?thread_id={thread_id}. Also hiding the same fields the client should be see.
+
+```js
+
+```
+
+I can delete a thread completely if I send a DELETE request to /api/threads/{board} and pass along the threadid\_ & deletepassword\_. (Text response will be 'incorrect password' or 'success')
+
+```js
+
+```
+
+I can delete a post(just changing the text to '[deleted]' instead of removing completely like a thread) if I send a DELETE request to /api/replies/{board} and pass along the threadid\_, replyid\_, & deletepassword\_. (Text response will be 'incorrect password' or 'success')
+
+```js
+
+```
+
+I can report a thread and change its reported value to true by sending a PUT request to /api/threads/{board} and pass along the threadid\_. (Text response will be 'success')
+
+```js
+
+```
+
+I can report a reply and change its reported value to true by sending a PUT request to /api/replies/{board} and pass along the threadid\_ & replyid\_. (Text response will be 'success')
+
+```js
+
+```
+
+Complete functional tests that wholly test routes and pass.
+
+```js
+
+```
+
+# --seed--
+
+# --solutions--
+
+```js
+/**
+  Backend challenges don't need solutions, 
+  because they would need to be tested against a full working project. 
+  Please check our contributing guidelines to learn more.
+*/
+```
