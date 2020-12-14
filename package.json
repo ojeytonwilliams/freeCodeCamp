@@ -90,7 +90,7 @@
     "readdirp-walk": "^1.7.0",
     "shortid": "^2.2.15",
     "shx": "^0.3.2",
-    "sinon": "^7.4.1",
+    "sinon": "^9.2.2",
     "sinon-express-mock": "^2.2.1",
     "slugg": "^1.2.1",
     "start-server-and-test": "^1.11.5"
