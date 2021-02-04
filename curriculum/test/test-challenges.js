@@ -157,6 +157,28 @@ async function setup() {
 
   let challenges = await getChallenges(lang);
 
+  const challengeIds = challenges.map(({ id }) => id);
+  // NOTE: parsing the english challenges just get the ids is inefficient, but
+  // it's a tiny fraction of the total test time.
+  const englishIds =
+    lang === 'english'
+      ? challengeIds
+      : (await getChallenges('english')).map(({ id }) => id);
+
+  englishIds.forEach(id => {
+    if (!challengeIds.includes(id)) {
+      throw Error(`${lang}'s curriculum should include challenge ${id}.`);
+    }
+  });
+
+  challengeIds.forEach(id => {
+    if (!englishIds.includes(id)) {
+      throw Error(
+        `${lang}'s curriculum includes challenge ${id}, this should also appear in the English.`
+      );
+    }
+  });
+
   // the next few statements create a list of all blocks and superblocks
   // as they appear in the list of challenges
   const blocks = challenges.map(({ block }) => block);
