@@ -1,0 +1,44 @@
+name: Build Client
+on:
+  push:
+    branches-ignore:
+      - 'renovate/**'
+  pull_request:
+
+jobs:
+  build-client:
+    name: Build
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout Source Files
+        uses: actions/checkout@v2
+
+      - name: Checkout client-config
+        uses: actions/checkout@v2
+        with:
+          repository: freeCodeCamp/client-config
+          path: client-config
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'npm'
+
+      - name: Set freeCodeCamp Environment Variables
+        run: cp sample.env .env
+
+      - name: Install and Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Move serve.json to Public Folder
+        run: cp client-config/serve.json client/public/serve.json
+
+      - name: Upload Client Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: client-artifact
+          path: client/public

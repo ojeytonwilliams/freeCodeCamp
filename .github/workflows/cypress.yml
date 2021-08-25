@@ -1,9 +1,9 @@
 name: Cypress
 on:
-  push:
-    branches-ignore:
-      - 'renovate/**'
-  pull_request:
+  workflow_run:
+    workflows: ["Build Client"]
+    types:
+      - completed
 
 jobs:
   cypress-run:
@@ -33,14 +33,9 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           echo "CYPRESS_INSTALL_BINARY=7.7.0" >> $GITHUB_ENV
 
-      - name: Checkout Source Files
-        uses: actions/checkout@v2
-
-      - name: Checkout client config
-        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
         with:
-          repository: freeCodeCamp/client-config
-          path: client-config
+          name: client-artifact
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -51,15 +46,11 @@ jobs:
       - name: Set freeCodeCamp Environment Variables
         run: cp sample.env .env
 
+      # TODO: install only the deps we need and only run the scripts we need.
       - name: Install Dependencies
         run: |
           npm ci
           npm run ensure-env
-
-      - name: Move serve.json to client
-        run: |
-          mkdir -p client/public
-          cp client-config/serve.json client/public/serve.json
 
       - name: Seed Database
         run: npm run seed
@@ -68,7 +59,6 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          build: npm run build
           start: npm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
