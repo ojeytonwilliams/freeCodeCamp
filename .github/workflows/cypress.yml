@@ -97,10 +97,12 @@ jobs:
         run: cp sample.env .env
 
       # TODO: install only the deps we need and only run the scripts we need.
-      - name: Install Dependencies
+      - name: Install and Build
         run: |
           npm ci
           npm run ensure-env
+          npm run build:curriculum
+          npm run build:server
 
       - name: Seed Database
         run: npm run seed
@@ -109,7 +111,6 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          build: npm run build:curriculum && npm run build:server
           start: npm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
