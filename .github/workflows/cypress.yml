@@ -37,11 +37,15 @@ jobs:
       - name: Move serve.json to Public Folder
         run: cp client-config/serve.json client/public/serve.json
 
+      # We tar them for performance reasons - uploading a lot of files is slow.
+      - name: 'Tar files'
+        run: tar -cf client-artifact.tar client/public
+
       - name: Upload Client Artifact
         uses: actions/upload-artifact@v2
         with:
           name: client-artifact
-          path: client/public
+          path: client-artifact.tar
 
   cypress-run:
     name: Test
@@ -71,9 +75,17 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           echo "CYPRESS_INSTALL_BINARY=7.7.0" >> $GITHUB_ENV
 
+      - name: Checkout Source Files
+        uses: actions/checkout@v2
+
       - uses: actions/download-artifact@v2
         with:
           name: client-artifact
+
+      - name: Unpack Client Artifact
+        run: |
+          tar -xf client-artifact.tar
+          rm client-artifact.tar
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
