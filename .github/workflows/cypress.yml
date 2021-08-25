@@ -47,14 +47,24 @@ jobs:
           name: client-artifact
           path: client-artifact.tar
 
+      - name: Upload Webpack stats
+        uses: actions/upload-artifact@v2
+        with:
+          name: webpack-stats
+          path: client/public/stats.json
+
+
   cypress-run:
     name: Test
     runs-on: ubuntu-18.04
     needs: build-client
     strategy:
       matrix:
-        browsers: [chrome, firefox]
+        browsers: [chrome, firefox, electron]
         node-version: [14.x]
+        include:
+          - browsers: electron
+            spec: cypress/integration/learn/challenges/projects.js
     services:
       mongodb:
         image: mongo:3.6.19
@@ -117,3 +127,4 @@ jobs:
           config: baseUrl=http://localhost:8000
           browser: ${{ matrix.browsers }}
           headless: true
+          spec: ${{ matrix.spec }}
