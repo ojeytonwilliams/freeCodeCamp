@@ -8,7 +8,7 @@
     "@fastify/middie": "8.1",
     "@fastify/mongodb": "6.2.0",
     "@fastify/session": "^10.1.1",
-    "connect-mongo": "^4.6.0",
+    "connect-mongo": "5.0.0",
     "fastify": "4.14.1",
     "fastify-auth0-verify": "^1.0.0",
     "fastify-plugin": "^4.3.0",
@@ -42,5 +42,8 @@
     "start": "NODE_ENV=production node index.js",
     "test": "node --test -r ts-node/register **/*.test.ts"
   },
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "devDependencies": {
+    "@types/express-session": "1.17.6"
+  }
 }

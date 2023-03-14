@@ -119,7 +119,8 @@ importers:
       '@fastify/middie': '8.1'
       '@fastify/mongodb': 6.2.0
       '@fastify/session': ^10.1.1
-      connect-mongo: ^4.6.0
+      '@types/express-session': 1.17.6
+      connect-mongo: 5.0.0
       fastify: 4.14.1
       fastify-auth0-verify: ^1.0.0
       fastify-plugin: ^4.3.0
@@ -129,11 +130,13 @@ importers:
       '@fastify/middie': 8.1.0
       '@fastify/mongodb': 6.2.0
       '@fastify/session': 10.1.1
-      connect-mongo: 4.6.0_lw7oj3533zfvrhxigrep3g2fam
+      connect-mongo: 5.0.0_bsn6jolx7p7p2daxgm5hd7arpe
       fastify: 4.14.1
       fastify-auth0-verify: 1.0.0
       fastify-plugin: 4.5.0
       nodemon: 2.0.21
+    devDependencies:
+      '@types/express-session': 1.17.6
 
   api-server:
     specifiers:
@@ -8038,6 +8041,12 @@ packages:
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
 
+  /@types/express-session/1.17.6:
+    resolution: {integrity: sha512-L6sB04HVA4HEZo1hDL65JXdZdBJtzZnCiw/P7MnO4w6746tJCNtXlHtzEASyI9ccn9zyOw6IbqQuhVa03VpO4w==}
+    dependencies:
+      '@types/express': 4.17.17
+    dev: true
+
   /@types/express/4.17.17:
     resolution: {integrity: sha512-Q4FmmuLGBG58btUnfS1c1r/NQdlp3DMfGDGig8WhfpA2YRUtEkxAjkZb0yvplJGYdF1fsQ81iMDcH24sSCNC/Q==}
     dependencies:
@@ -11490,6 +11499,11 @@ packages:
       buffer: 5.7.1
     dev: false
 
+  /bson/5.0.1:
+    resolution: {integrity: sha512-y09gBGusgHtinMon/GVbv1J6FrXhnr/+6hqLlSmEFzkz6PodqF6TxjyvfvY3AfO+oG1mgUtbC86xSbOlwvM62Q==}
+    engines: {node: '>=14.20.1'}
+    dev: false
+
   /buffer-crc32/0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
     dev: true
@@ -12349,17 +12363,17 @@ packages:
       - snappy
     dev: false
 
-  /connect-mongo/4.6.0_lw7oj3533zfvrhxigrep3g2fam:
-    resolution: {integrity: sha512-8new4Z7NLP3CGP65Aw6ls3xDBeKVvHRSh39CXuDZTQsvpeeU9oNMzfFgvqmHqZ6gWpxIl663RyoVEmCAGf1yOg==}
-    engines: {node: '>=10'}
+  /connect-mongo/5.0.0_bsn6jolx7p7p2daxgm5hd7arpe:
+    resolution: {integrity: sha512-s93jiP6GkRApn5duComx6RLwtP23YrulPxShz+8peX7svd6Q+MS8nKLhKCCazbP92C13eTVaIOxgeLt0ezIiCg==}
+    engines: {node: '>=12.9.0'}
     peerDependencies:
       express-session: ^1.17.1
-      mongodb: ^4.1.0
+      mongodb: ^5.1.0
     dependencies:
       debug: 4.3.4
       express-session: 1.17.3
       kruptein: 3.0.6
-      mongodb: 4.14.0
+      mongodb: 5.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -22048,6 +22062,28 @@ packages:
       saslprep: 1.0.3
     transitivePeerDependencies:
       - aws-crt
+    dev: false
+
+  /mongodb/5.1.0:
+    resolution: {integrity: sha512-qgKb7y+EI90y4weY3z5+lIgm8wmexbonz0GalHkSElQXVKtRuwqXuhXKccyvIjXCJVy9qPV82zsinY0W1FBnJw==}
+    engines: {node: '>=14.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.201.0
+      mongodb-client-encryption: ^2.3.0
+      snappy: ^7.2.2
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+    dependencies:
+      bson: 5.0.1
+      mongodb-connection-string-url: 2.6.0
+      socks: 2.7.1
+    optionalDependencies:
+      saslprep: 1.0.3
     dev: false
 
   /moo/0.5.2:
