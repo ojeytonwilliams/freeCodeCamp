@@ -12,7 +12,7 @@ import store from 'store';
 import { v4 as uuid } from 'uuid';
 
 import { challengeTypes } from '../../../shared/config/challenge-types';
-import { isGoodXHRStatus } from '../templates/Challenges/utils';
+import { isServerError } from '../templates/Challenges/utils';
 import postUpdate$ from '../templates/Challenges/utils/post-update';
 import { actionTypes } from './action-types';
 import { serverStatusChange } from './actions';
@@ -74,9 +74,12 @@ function failedUpdateEpic(action$, state$) {
           postUpdate$(update)
             .pipe(
               switchMap(({ response, data }) => {
-                if (data?.message || isGoodXHRStatus(response?.status)) {
+                // It is potentially worth retrying an update if the server
+                // reports an error. Otherwise, the update must have either
+                // succeeded or be a bad request. In either case, there's no
+                // point in retrying.
+                if (data?.message || !isServerError(response?.status)) {
                   console.info(`${update.id} succeeded`);
-                  // the request completed successfully
                   const failures = store.get(key) || [];
                   const newFailures = failures.filter(x => x.id !== update.id);
                   store.set(key, newFailures);
