@@ -8,6 +8,7 @@
     "node": ">=18",
     "pnpm": ">=9"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/freeCodeCamp/freeCodeCamp.git"
@@ -20,7 +21,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_OPTIONS=\"--max-old-space-size=7168\" webpack -c webpack.config.js"
+    "build": "NODE_OPTIONS=\"--max-old-space-size=7168\" webpack -c webpack.config.cjs"
   },
   "keywords": [],
   "devDependencies": {
