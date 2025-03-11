@@ -14,6 +14,7 @@ const authRE = /^\/auth\//;
 const confirmEmailRE = /^\/confirm-email$/;
 const newsShortLinksRE = /^\/n\/|^\/p\//;
 const publicUserRE = /^\/api\/users\/get-public-profile$/;
+const publicUserNoApiRE = /^\/api\/users\/get-public-profile$/;
 const publicUsernameRE = /^\/api\/users\/exists$/;
 const resubscribeRE = /^\/resubscribe\//;
 const showCertRE = /^\/certificate\/showCert\//;
@@ -34,6 +35,7 @@ const _pathsAllowedREs = [
   newsShortLinksRE,
   publicUserRE,
   publicUsernameRE,
+  publicUserNoApiRE,
   resubscribeRE,
   showCertRE,
   signinRE,

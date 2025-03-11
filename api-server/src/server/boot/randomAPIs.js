@@ -12,11 +12,13 @@ module.exports = function (app) {
   const User = app.models.User;
 
   router.get('/api/github', deprecatedEndpoint);
+  router.get('/github', deprecatedEndpoint);
   router.get('/u/:email', unsubscribeDeprecated);
   router.get('/unsubscribe/:email', unsubscribeDeprecated);
   router.get('/ue/:unsubscribeId', unsubscribeById);
   router.get('/resubscribe/:unsubscribeId', resubscribe);
   router.get('/api/users/get-public-profile', blockUserAgent, getPublicProfile);
+  router.get('/users/get-public-profile', blockUserAgent, getPublicProfile);
 
   app.use(router);
 
