@@ -12,7 +12,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            core.setOutput('is_allow_listed', false);
+            core.setOutput('is_allow_listed', true);
             core.setOutput('another', true)
 
       - name: Check if commits are made on GitHub Web UI
