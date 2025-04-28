@@ -20,12 +20,7 @@ jobs:
           echo "${{ steps.pr_author.outputs.result }}"
           echo "${{ steps.pr_author.outputs }}"
           echo "${{ steps.pr_author.outputs.result.is_allow_listed }}"
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          COMMITS_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/commits"
-          IS_GITHUB_COMMIT=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$COMMITS_URL" | jq '[.[] | .commit.committer.name] | any(.[]; . == "GitHub")')
-          if [ "$IS_GITHUB_COMMIT" = "true" ]; then
-            echo "IS_GITHUB_COMMIT=true" >> $GITHUB_ENV
-          fi
+          echo "${{ steps.pr_author.outputs.is_allow_listed }}"
 
       - name: Add comment on PR if commits are made on GitHub Web UI
         uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
