@@ -12,7 +12,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            core.setOutput('is_allow_listed', true);
+            core.setOutput('is_allow_listed', "true");
+            core.setOutput('another', true)
 
       - name: Check if commits are made on GitHub Web UI
         id: check-commits
@@ -21,6 +22,7 @@ jobs:
           echo "${{ steps.pr_author.outputs }}"
           echo "${{ steps.pr_author.outputs.result.is_allow_listed }}"
           echo "${{ steps.pr_author.outputs.is_allow_listed }}"
+          echo "${{ steps.pr_author.outputs.another }}"
 
       - name: Add comment on PR if commits are made on GitHub Web UI
         uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
