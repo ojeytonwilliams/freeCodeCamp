@@ -17,7 +17,7 @@ jobs:
 
       - name: Check if commits are made on GitHub Web UI
         id: check-commits
-        if: steps.pr_author.outputs.is_allow_listed != false
+        if: steps.pr_author.outputs.is_allow_listed != 'false'
         run: |
           echo "${{ steps.pr_author.outputs.result }}"
           echo "${{ steps.pr_author.outputs }}"
