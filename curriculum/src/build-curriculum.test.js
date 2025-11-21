@@ -175,9 +175,50 @@ describe('getSuperblocks', () => {
   });
 });
 
+const currentSuperBlocks = [
+  SuperBlocks.RespWebDesignNew,
+  SuperBlocks.RespWebDesign,
+  SuperBlocks.JsAlgoDataStruct,
+  SuperBlocks.JsAlgoDataStructNew,
+  SuperBlocks.FrontEndDevLibs,
+  SuperBlocks.DataVis,
+  SuperBlocks.RelationalDb,
+  SuperBlocks.BackEndDevApis,
+  SuperBlocks.QualityAssurance,
+  SuperBlocks.SciCompPy,
+  SuperBlocks.DataAnalysisPy,
+  SuperBlocks.InfoSec,
+  SuperBlocks.MachineLearningPy,
+  SuperBlocks.CodingInterviewPrep,
+  SuperBlocks.TheOdinProject,
+  SuperBlocks.ProjectEuler,
+  SuperBlocks.CollegeAlgebraPy,
+  SuperBlocks.FoundationalCSharp,
+  SuperBlocks.FullStackDeveloper,
+  SuperBlocks.A2English,
+  SuperBlocks.B1English,
+  SuperBlocks.A1Spanish,
+  SuperBlocks.A2Spanish,
+  SuperBlocks.A2Chinese,
+  SuperBlocks.A1Chinese,
+  SuperBlocks.RosettaCode,
+  SuperBlocks.PythonForEverybody,
+  SuperBlocks.BasicHtml,
+  SuperBlocks.SemanticHtml,
+  SuperBlocks.DevPlayground,
+  SuperBlocks.FullStackOpen,
+  SuperBlocks.RespWebDesignV9,
+  SuperBlocks.JsV9,
+  SuperBlocks.FrontEndDevLibsV9,
+  SuperBlocks.PythonV9,
+  SuperBlocks.RelationalDbV9,
+  SuperBlocks.BackEndDevApisV9,
+  SuperBlocks.FullStackDeveloperV9
+];
+
 describe('superBlockNames', () => {
   it('should have mappings for each SuperBlock', () => {
-    const superBlocks = Object.values(SuperBlocks).sort(); // sorting to make comparison clearer
+    const superBlocks = currentSuperBlocks.sort(); // sorting to make comparison clearer
     const names = Object.values(superBlockNames).sort();
 
     expect(names).toHaveLength(superBlocks.length);

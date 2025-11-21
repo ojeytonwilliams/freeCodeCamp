@@ -4,6 +4,14 @@ import { Languages } from './i18n.js';
 
 // all superblocks
 export enum SuperBlocks {
+  // Legacy (i.e. superblocks that are no longer hosted):
+  LegacyFrontEnd = 'legacy-front-end',
+  LegacyBackEnd = 'legacy-back-end',
+  LegacyDataVis = 'legacy-data-visualization',
+  LegacyInfoSecQa = 'information-security-and-quality-assurance',
+  LegacyFullStack = 'full-stack',
+
+  // Current:
   RespWebDesignNew = '2022/responsive-web-design',
   RespWebDesign = 'responsive-web-design',
   JsAlgoDataStruct = 'javascript-algorithms-and-data-structures',

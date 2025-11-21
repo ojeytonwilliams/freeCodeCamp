@@ -47,6 +47,47 @@ const fullSuperOrder = {
   [SuperBlocks.FullStackDeveloper]: 18
 };
 
+const currentSuperBlocks = [
+  SuperBlocks.RespWebDesignNew,
+  SuperBlocks.RespWebDesign,
+  SuperBlocks.JsAlgoDataStruct,
+  SuperBlocks.JsAlgoDataStructNew,
+  SuperBlocks.FrontEndDevLibs,
+  SuperBlocks.DataVis,
+  SuperBlocks.RelationalDb,
+  SuperBlocks.BackEndDevApis,
+  SuperBlocks.QualityAssurance,
+  SuperBlocks.SciCompPy,
+  SuperBlocks.DataAnalysisPy,
+  SuperBlocks.InfoSec,
+  SuperBlocks.MachineLearningPy,
+  SuperBlocks.CodingInterviewPrep,
+  SuperBlocks.TheOdinProject,
+  SuperBlocks.ProjectEuler,
+  SuperBlocks.CollegeAlgebraPy,
+  SuperBlocks.FoundationalCSharp,
+  SuperBlocks.FullStackDeveloper,
+  SuperBlocks.A2English,
+  SuperBlocks.B1English,
+  SuperBlocks.A1Spanish,
+  SuperBlocks.A2Spanish,
+  SuperBlocks.A2Chinese,
+  SuperBlocks.A1Chinese,
+  SuperBlocks.RosettaCode,
+  SuperBlocks.PythonForEverybody,
+  SuperBlocks.BasicHtml,
+  SuperBlocks.SemanticHtml,
+  SuperBlocks.DevPlayground,
+  SuperBlocks.FullStackOpen,
+  SuperBlocks.RespWebDesignV9,
+  SuperBlocks.JsV9,
+  SuperBlocks.FrontEndDevLibsV9,
+  SuperBlocks.PythonV9,
+  SuperBlocks.RelationalDbV9,
+  SuperBlocks.BackEndDevApisV9,
+  SuperBlocks.FullStackDeveloperV9
+];
+
 describe('createSuperOrder', () => {
   const superOrder = createSuperOrder(mockSuperBlocks);
 
@@ -67,20 +108,20 @@ describe('getSuperOrder', () => {
   });
 
   it('returns numbers for all current curriculum', () => {
-    const superBlocks = Object.values(SuperBlocks);
-
-    const superOrderValues = superBlocks.map(sb => getSuperOrder(sb, true));
+    const superOrderValues = currentSuperBlocks.map(sb =>
+      getSuperOrder(sb, true)
+    );
     const definedValues = superOrderValues.filter(v => typeof v === 'number');
 
-    expect(definedValues.length).toBe(superBlocks.length);
+    expect(definedValues.length).toBe(currentSuperBlocks.length);
   });
 
   it('returns unique numbers for all current curriculum', () => {
-    const superBlocks = Object.values(SuperBlocks);
-
-    const superOrderValues = superBlocks.map(sb => getSuperOrder(sb, true));
+    const superOrderValues = currentSuperBlocks.map(sb =>
+      getSuperOrder(sb, true)
+    );
     const uniqueValues = Array.from(new Set(superOrderValues));
 
-    expect(uniqueValues.length).toBe(superBlocks.length);
+    expect(uniqueValues.length).toBe(currentSuperBlocks.length);
   });
 });

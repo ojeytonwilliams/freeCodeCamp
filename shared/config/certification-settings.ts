@@ -127,6 +127,8 @@ export const certTypes = {
   a2English: 'isA2EnglishCert'
 } as const;
 
+type CertType = (typeof certTypes)[keyof typeof certTypes];
+
 export const certIds = {
   legacyFrontEndChallengeId: '561add10cb82ac38a17513be',
   legacyBackEndChallengeId: '660add10cb82ac38a17513be',
@@ -212,14 +214,14 @@ export const certSlugTypeMap = {
   [Certification.JsV9]: certTypes.javascriptV9
 };
 
-export const superBlockCertTypeMap = {
+export const superBlockCertTypeMap: Partial<Record<SuperBlocks, CertType>> = {
   // legacy
-  'legacy-front-end': certTypes.frontEnd,
+  [SuperBlocks.LegacyFrontEnd]: certTypes.frontEnd,
   [SuperBlocks.JsAlgoDataStruct]: certTypes.jsAlgoDataStruct,
-  'legacy-back-end': certTypes.backEnd,
-  'legacy-data-visualization': certTypes.dataVis,
-  'information-security-and-quality-assurance': certTypes.infosecQa,
-  'full-stack': certTypes.fullStack,
+  [SuperBlocks.LegacyBackEnd]: certTypes.backEnd,
+  [SuperBlocks.LegacyDataVis]: certTypes.dataVis,
+  [SuperBlocks.LegacyInfoSecQa]: certTypes.infosecQa,
+  [SuperBlocks.LegacyFullStack]: certTypes.fullStack,
 
   // modern
   [SuperBlocks.RespWebDesign]: certTypes.respWebDesign,
@@ -237,7 +239,6 @@ export const superBlockCertTypeMap = {
   [SuperBlocks.FoundationalCSharp]: certTypes.foundationalCSharpV8,
 
   // post-modern
-  // TODO: use enum
   [SuperBlocks.RespWebDesignNew]: certTypes.respWebDesign,
 
   // upcoming
@@ -299,6 +300,11 @@ export const certTypeTitleMap = {
 export const superBlockToCertMap: {
   [key in SuperBlocks]: Certification | null;
 } = {
+  [SuperBlocks.LegacyFrontEnd]: null,
+  [SuperBlocks.LegacyBackEnd]: null,
+  [SuperBlocks.LegacyDataVis]: null,
+  [SuperBlocks.LegacyInfoSecQa]: null,
+  [SuperBlocks.LegacyFullStack]: null,
   [SuperBlocks.RespWebDesign]: Certification.RespWebDesign,
   [SuperBlocks.JsAlgoDataStructNew]: Certification.JsAlgoDataStructNew,
   [SuperBlocks.FrontEndDevLibs]: Certification.FrontEndDevLibs,
