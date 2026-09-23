@@ -6,6 +6,7 @@ import {
   afterEach,
   beforeEach,
   afterAll,
+  onTestFinished,
   vi
 } from 'vitest';
 
@@ -35,9 +36,9 @@ vi.mock('../../utils/exam.js', async () => {
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { omit } from 'lodash-es';
+import { omit, uniqBy } from 'lodash-es';
 import { Static } from '@fastify/type-provider-typebox';
-import { DailyCodingChallengeLanguage } from '@prisma/client';
+import { DailyCodingChallengeLanguage, Prisma } from '@prisma/client';
 import request from 'supertest';
 
 import { challengeTypes } from '@freecodecamp/shared/config/challenge-types';
@@ -72,6 +73,7 @@ import type { getSessionUser } from '../../schemas/user/get-session-user.js';
 import { verifyTrophyWithMicrosoft } from '../helpers/challenge-helpers.js';
 import { encodeUserToken } from '../../utils/tokens.js';
 import { generateRandomExam } from '../../utils/exam.js';
+import { challenges, savableChallenges } from '../../utils/get-challenges.js';
 
 const mockVerifyTrophyWithMicrosoft = vi.mocked(verifyTrophyWithMicrosoft);
 const mockGenerateRandomExam = vi.mocked(generateRandomExam);
@@ -1382,6 +1384,195 @@ describe('challengeRoutes', () => {
         });
         expect(response.statusCode).toBe(403);
       });
+
+      test('should retry a write conflict when completing a challenge', async ({
+        onTestFinished
+      }) => {
+        const updateSpy = vi
+          .spyOn(fastifyTestInstance.prisma.user, 'update')
+          .mockRejectedValueOnce(
+            new Prisma.PrismaClientKnownRequestError('Write conflict', {
+              code: 'P2034',
+              clientVersion: Prisma.prismaVersion.client
+            })
+          );
+        onTestFinished(() => updateSpy.mockRestore());
+
+        const response = await superPost(
+          '/encoded/modern-challenge-completed'
+        ).send(HtmlChallengeBody);
+        const user = await fastifyTestInstance.prisma.user.findUniqueOrThrow({
+          where: { id: defaultUserId },
+          select: { completedChallenges: true }
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(updateSpy).toHaveBeenCalledTimes(2);
+        expect(user.completedChallenges).toEqual([
+          expect.objectContaining({ id: HtmlChallengeId })
+        ]);
+      });
+
+      test.each([
+        { code: 'P2034', expectedAttempts: 2 },
+        { code: 'P2025', expectedAttempts: 1 }
+      ])(
+        'should stop after $expectedAttempts attempts for $code',
+        async ({ code, expectedAttempts }) => {
+          const updateSpy = vi
+            .spyOn(fastifyTestInstance.prisma.user, 'update')
+            .mockRejectedValue(
+              new Prisma.PrismaClientKnownRequestError('Update failed', {
+                code,
+                clientVersion: Prisma.prismaVersion.client
+              })
+            );
+          onTestFinished(() => updateSpy.mockRestore());
+
+          const response = await superPost(
+            '/encoded/modern-challenge-completed'
+          )
+            .set('Accept', 'application/json')
+            .send(HtmlChallengeBody);
+
+          expect(response.statusCode).toBe(500);
+          expect(updateSpy).toHaveBeenCalledTimes(expectedAttempts);
+        }
+      );
+
+      test('should preserve all concurrent challenge completions', async ({
+        onTestFinished
+      }) => {
+        const requestCount = 100;
+        const previousChallengeCount = 1000;
+        const fileLineCount = 1000;
+        const submissions = uniqBy(
+          challenges.filter(
+            challenge =>
+              savableChallenges.has(challenge.id) && !challenge.isExam
+          ),
+          'id'
+        ).slice(0, requestCount);
+        expect(submissions.length).toBeGreaterThan(0);
+        const originalContents = 'console.log("original");\n'.repeat(
+          fileLineCount
+        );
+        const updatedContents = 'console.log("updated");\n'.repeat(
+          fileLineCount
+        );
+        const savedFiles = jsFiles.map(file => ({
+          ...file,
+          contents: originalContents
+        }));
+        const completedChallenges = [
+          ...Array.from({ length: previousChallengeCount }, (_, index) => ({
+            id: (index + 1).toString(16).padStart(24, '0'),
+            completedDate: EXISTING_COMPLETED_DATE
+          })),
+          ...submissions.map(({ id }) => ({
+            id,
+            completedDate: EXISTING_COMPLETED_DATE,
+            files: savedFiles.map(file => omit(file, 'history'))
+          }))
+        ];
+        const savedChallenges = submissions.map(({ id }) => ({
+          id,
+          lastSavedDate: EXISTING_COMPLETED_DATE,
+          files: savedFiles
+        }));
+        await fastifyTestInstance.prisma.user.update({
+          where: { id: defaultUserId },
+          data: {
+            completedChallenges,
+            savedChallenges,
+            progressTimestamps: completedChallenges.map(
+              () => EXISTING_COMPLETED_DATE
+            )
+          },
+          select: { id: true }
+        });
+        const userBefore =
+          await fastifyTestInstance.prisma.user.findUniqueOrThrow({
+            where: { id: defaultUserId },
+            select: { completedChallenges: true, savedChallenges: true }
+          });
+        expect(userBefore.completedChallenges).toHaveLength(
+          completedChallenges.length
+        );
+        expect(userBefore.savedChallenges).toHaveLength(savedChallenges.length);
+        const requests = Array.from(
+          { length: requestCount },
+          (_, index) => submissions[index % submissions.length]!
+        );
+
+        // Observe the real updates before the HTTP error handler replaces their
+        // errors with a generic response. The spy still calls Prisma normally.
+        const updateSpy = vi.spyOn(fastifyTestInstance.prisma.user, 'update');
+        onTestFinished(() => updateSpy.mockRestore());
+
+        const responses = await Promise.all(
+          requests.map(({ id, challengeType }) =>
+            superPost('/encoded/modern-challenge-completed').send({
+              id,
+              challengeType,
+              files: jsFiles.map(file => ({
+                ...file,
+                contents: btoa(updatedContents)
+              }))
+            })
+          )
+        );
+        const updates = await Promise.allSettled(
+          updateSpy.mock.results
+            .filter(result => result.type === 'return')
+            .map(result => result.value)
+        );
+        const userAfter =
+          await fastifyTestInstance.prisma.user.findUniqueOrThrow({
+            where: { id: defaultUserId },
+            select: { completedChallenges: true, savedChallenges: true }
+          });
+
+        expect.soft(updates.length).toBeGreaterThanOrEqual(requestCount);
+        expect
+          .soft(
+            responses
+              .map((response, index) => ({
+                challengeId: requests[index]!.id,
+                statusCode: response.statusCode,
+                body: response.body
+              }))
+              .filter(response => response.statusCode !== 200),
+            `Failed challenge completion requests. Prisma user.update() errors:\n${updates
+              .filter(result => result.status === 'rejected')
+              .map(result => String(result.reason))
+              .join('\n')}`
+          )
+          .toEqual([]);
+        expect(userAfter.completedChallenges).toHaveLength(
+          completedChallenges.length
+        );
+        expect(userAfter.savedChallenges).toHaveLength(savedChallenges.length);
+        expect(
+          userAfter.completedChallenges.map(({ id }) => id).sort()
+        ).toEqual(completedChallenges.map(({ id }) => id).sort());
+        expect
+          .soft(
+            userAfter.completedChallenges
+              .filter(challenge => savableChallenges.has(challenge.id))
+              .map(({ id, files }) => ({
+                id,
+                updated: files[0]?.contents === updatedContents
+              }))
+          )
+          .toEqual(submissions.map(({ id }) => ({ id, updated: true })));
+        expect(
+          userAfter.savedChallenges.map(({ id, files }) => ({
+            id,
+            updated: files[0]?.contents === updatedContents
+          }))
+        ).toEqual(submissions.map(({ id }) => ({ id, updated: true })));
+      }, 30000);
 
       // JS Project(5), Multi-file Cert Project(14)
       test('POST accepts challenges with files present', async () => {
